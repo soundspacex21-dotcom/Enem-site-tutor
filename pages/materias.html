@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matérias — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">E</div>
+    <div class="logo-text">
+      <span class="logo-title">ENEM</span>
+      <span class="logo-sub">Acelerado</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item active"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="quiz.html" class="nav-item"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item"><i class="ti ti-calendar"></i><span>Planner</span></a>
+    <a href="tutor.html" class="nav-item"><i class="ti ti-school"></i><span>Tutor ENEM</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="progress-summary">
+      <div class="ps-label">Progresso geral</div>
+      <div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div>
+      <div class="ps-pct" id="global-pct">0%</div>
+    </div>
+  </div>
+</aside>
+
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Matérias</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content">
+  <div id="view-list">
+    <div class="page-header">
+      <h1>Matérias do ENEM</h1>
+      <p>Selecione uma área para explorar os tópicos com as 12 técnicas de aprendizagem acelerada.</p>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterArea('all',this)">Todas as áreas</button>
+      <button class="filter-btn" onclick="filterArea('hot',this)">🔥 Mais cobrados</button>
+      <button class="filter-btn" onclick="filterArea('med',this)">⚠️ Cobrados</button>
+    </div>
+
+    <div id="areas-list"></div>
+  </div>
+
+  <div id="view-topic" style="display:none">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div id="topic-content"></div>
+  </div>
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script src="../js/data.js"></script>
+<script>
+const FREQ_LABEL = { hot: '🔥 Muito cobrado', med: '⚠️ Cobrado', ok: '✅ Pontual' };
+const FREQ_CLASS = { hot: 'badge-hot', med: 'badge-med', ok: 'badge-ok' };
+
+function renderAreaList(filter='all') {
+  let html = '';
+  Object.entries(MATERIAS).forEach(([key, m]) => {
+    const topicos = filter === 'all' ? m.topicos : m.topicos.filter(t => t.freq === filter);
+    if (!topicos.length) return;
+    html += `
+      <div style="margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <span style="font-size:22px">${m.icon}</span>
+          <h2 style="font-size:16px;font-weight:600;color:var(--text)">${m.label}</h2>
+          <span style="font-size:12px;color:var(--text-3)">${topicos.length} tópico${topicos.length>1?'s':''}</span>
+        </div>
+        <div class="topic-grid">
+          ${topicos.map((t,i) => `
+            <div class="topic-card" onclick="openTopic('${key}','${t.id}','${t.nome}')">
+              <span class="topic-rank">${String(i+1).padStart(2,'0')}</span>
+              <span class="topic-name">${t.nome}</span>
+              <span style="font-size:11px;color:var(--text-3);margin-right:6px">${t.sub}</span>
+              <span class="badge ${FREQ_CLASS[t.freq]}">${FREQ_LABEL[t.freq]}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  });
+  document.getElementById('areas-list').innerHTML = html;
+}
+
+function filterArea(f, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAreaList(f);
+}
+
+function openTopic(areaKey, topicId, topicName) {
+  const m = MATERIAS[areaKey];
+  document.getElementById('view-list').style.display = 'none';
+  document.getElementById('view-topic').style.display = 'block';
+  document.getElementById('breadcrumb').innerHTML =
+    `<a href="#" onclick="closeTopic()">Matérias</a> <i class="ti ti-chevron-right" style="font-size:12px"></i> <span>${m.label}</span> <i class="ti ti-chevron-right" style="font-size:12px"></i> <span>${topicName}</span>`;
+
+  const studied = JSON.parse(localStorage.getItem('studied') || '[]');
+  const studyKey = areaKey + '-' + topicId;
+  const isDone = studied.includes(studyKey);
+
+  document.getElementById('topic-content').innerHTML = `
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap">
+      <div>
+        <h1 style="font-size:26px;font-weight:700;margin-bottom:4px">${topicName}</h1>
+        <p style="font-size:14px;color:var(--text-2)">${m.label} · ${topicName}</p>
+      </div>
+      <button onclick="markStudied('${areaKey}','${topicId}',this)" id="study-btn"
+        class="btn ${isDone ? 'btn-teal' : 'btn-outline'}" style="white-space:nowrap">
+        ${isDone ? '<i class="ti ti-check"></i> Estudado' : '<i class="ti ti-book"></i> Marcar como estudado'}
+      </button>
+    </div>
+
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab(event,'t-visao')">📌 Visão Geral</button>
+      <button class="tab-btn" onclick="switchTab(event,'t-historia')">🧠 História</button>
+      <button class="tab-btn" onclick="switchTab(event,'t-neuro')">🔗 Neuroassociação</button>
+      <button class="tab-btn" onclick="switchTab(event,'t-micro')">📚 Microlearning</button>
+      <button class="tab-btn" onclick="switchTab(event,'t-mnem')">⚡ Mnemônico</button>
+      <button class="tab-btn" onclick="switchTab(event,'t-prova')">🎯 Na prova</button>
+      <button class="tab-btn" onclick="switchTab(event,'t-cranio')">👁️ Nervos</button>
+    </div>
+
+    <div id="t-visao" class="tab-pane active">
+      <div class="learn-block">
+        <div class="learn-label"><i class="ti ti-map"></i> Visão Geral</div>
+        <div class="card-default">${m.visao}</div>
+      </div>
+    </div>
+
+    <div id="t-historia" class="tab-pane">
+      <div class="learn-block">
+        <div class="learn-label"><i class="ti ti-book-2"></i> História Memorável</div>
+        <div class="card-story">${m.historia}</div>
+      </div>
+    </div>
+
+    <div id="t-neuro" class="tab-pane">
+      <div class="learn-block">
+        <div class="learn-label"><i class="ti ti-brain"></i> Neuroassociação</div>
+        <div class="card-neuro">${m.neuro}</div>
+      </div>
+    </div>
+
+    <div id="t-micro" class="tab-pane">
+      <div class="learn-block">
+        <div class="learn-label"><i class="ti ti-stairs"></i> Microlearning — Do básico ao avançado</div>
+        <div class="micro-steps">
+          ${m.micro.map(s => `<div class="micro-step">${s}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div id="t-mnem" class="tab-pane">
+      <div class="learn-block">
+        <div class="learn-label"><i class="ti ti-bolt"></i> Mnemônico</div>
+        <div class="card-mnemonic">
+          <div class="mnem-word">${m.mnem.word}</div>
+          <div class="mnem-lines">${m.mnem.linhas.replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="t-prova" class="tab-pane">
+      <div class="learn-block">
+        <div class="learn-label"><i class="ti ti-target"></i> O que mais cai na prova</div>
+        <div class="card-proof">
+          <h4>Tópicos prioritários para o ENEM:</h4>
+          <ul>${m.provas.map(p => `<li>${p}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="t-cranio" class="tab-pane">
+      <div class="learn-block">
+        <div class="learn-label"><i class="ti ti-eye"></i> Integração com Nervos Cranianos</div>
+        <div class="micro-steps">
+          ${m.cranio.map(c => `<div class="micro-step">${c}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function closeTopic() {
+  document.getElementById('view-list').style.display = 'block';
+  document.getElementById('view-topic').style.display = 'none';
+}
+
+function markStudied(area, id, btn) {
+  const key = area + '-' + id;
+  let studied = JSON.parse(localStorage.getItem('studied') || '[]');
+  if (studied.includes(key)) {
+    studied = studied.filter(s => s !== key);
+    btn.className = 'btn btn-outline';
+    btn.innerHTML = '<i class="ti ti-book"></i> Marcar como estudado';
+  } else {
+    studied.push(key);
+    btn.className = 'btn btn-teal';
+    btn.innerHTML = '<i class="ti ti-check"></i> Estudado';
+  }
+  localStorage.setItem('studied', JSON.stringify(studied));
+  updateProgress();
+}
+
+function switchTab(e, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// Check URL param
+const params = new URLSearchParams(window.location.search);
+const areaParam = params.get('area');
+if (areaParam && MATERIAS[areaParam]) {
+  renderAreaList('all');
+}
+
+renderAreaList('all');
+</script>
+</body>
+</html>

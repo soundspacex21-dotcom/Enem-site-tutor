@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enviar Conteúdo — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+.output-block{display:none}.output-block.show{display:block}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result-section{margin-bottom:24px}
+.result-section h3{font-size:13px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.copy-btn{padding:6px 12px;border:1px solid var(--border-2);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-2);font-size:12px;cursor:pointer}
+.upload-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px}
+.upload-tab{padding:10px 16px;font-size:13px;font-weight:500;color:var(--text-2);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.upload-tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.upload-panel{display:none}.upload-panel.active{display:block}
+.drop-zone{border:2px dashed var(--border-2);border-radius:var(--radius);padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg-card);position:relative}
+.drop-zone:hover,.drop-zone.over{border-color:var(--purple);background:var(--purple-l)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:40px;color:var(--text-3);margin-bottom:10px;display:block}
+.drop-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.drop-sub{font-size:13px;color:var(--text-2)}
+.drop-sub strong{color:var(--purple)}
+.file-preview{display:none;align-items:center;gap:10px;padding:12px 14px;background:var(--purple-l);border:1px solid var(--purple);border-radius:var(--radius-sm);margin-top:12px}
+.file-preview.show{display:flex}
+.file-preview-name{flex:1;font-size:13px;color:var(--purple-d);font-weight:500}
+.file-remove{border:none;background:none;color:var(--purple-d);cursor:pointer;font-size:18px;padding:0}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark">E</div><div class="logo-text"><span class="logo-title">ENEM</span><span class="logo-sub">Acelerado</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="flashcards.html" class="nav-item"><i class="ti ti-cards"></i><span>Flashcards</span></a>
+    <a href="quiz.html" class="nav-item"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item active"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item"><i class="ti ti-calendar"></i><span>Planner</span></a>
+    <a href="tutor.html" class="nav-item"><i class="ti ti-school"></i><span>Tutor ENEM</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="progress-summary"><div class="ps-label">Progresso geral</div><div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div><div class="ps-pct" id="global-pct">0%</div></div></div>
+</aside>
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Enviar Conteúdo</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1>Enviar Conteúdo para Estudo Acelerado</h1>
+    <p>Envie um PDF, imagem, texto ou tema e receba o conteúdo processado com as 12 técnicas.</p>
+  </div>
+
+  <div style="max-width:720px">
+
+    <!-- INPUT TABS -->
+    <div class="upload-tabs">
+      <button class="upload-tab active" onclick="switchUploadTab('tab-tema',this)"><i class="ti ti-pencil"></i> Tema / Texto</button>
+      <button class="upload-tab" onclick="switchUploadTab('tab-pdf',this)"><i class="ti ti-file-type-pdf"></i> PDF</button>
+      <button class="upload-tab" onclick="switchUploadTab('tab-imagem',this)"><i class="ti ti-photo"></i> Imagem</button>
+      <button class="upload-tab" onclick="switchUploadTab('tab-txt',this)"><i class="ti ti-file-text"></i> Arquivo .txt</button>
+    </div>
+
+    <!-- TAB: TEMA -->
+    <div class="upload-panel active" id="tab-tema">
+      <textarea class="textarea-input" id="user-input" placeholder="Ex: 'Revolução Francesa', ou cole aqui um resumo do seu livro didático..." style="min-height:140px"></textarea>
+      <div style="margin-top:12px">
+        <div style="font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:8px">Temas rápidos:</div>
+        <div class="quick-tags">
+          <button class="qtag" style="background:var(--teal-l);color:var(--teal-d)" onclick="setTheme('Revolução Industrial')">Revolução Industrial</button>
+          <button class="qtag" style="background:var(--coral-l);color:var(--coral-d)" onclick="setTheme('Leis de Newton')">Leis de Newton</button>
+          <button class="qtag" style="background:var(--amber-l);color:var(--amber-d)" onclick="setTheme('Funções do 2° grau')">Funções do 2° grau</button>
+          <button class="qtag" style="background:var(--purple-l);color:var(--purple-d)" onclick="setTheme('Modernismo brasileiro')">Modernismo brasileiro</button>
+          <button class="qtag" style="background:var(--pink-l);color:var(--pink-d)" onclick="setTheme('Redação nota 1000 no ENEM')">Redação nota 1000</button>
+          <button class="qtag" style="background:var(--blue-l);color:var(--blue-d)" onclick="setTheme('Tabela Periódica')">Tabela Periódica</button>
+          <button class="qtag" style="background:var(--teal-l);color:var(--teal-d)" onclick="setTheme('Iluminismo')">Iluminismo</button>
+          <button class="qtag" style="background:var(--coral-l);color:var(--coral-d)" onclick="setTheme('DNA e Genética')">DNA e Genética</button>
+          <button class="qtag" style="background:var(--green-l);color:var(--green-d)" onclick="setTheme('Fotossíntese')">Fotossíntese</button>
+          <button class="qtag" style="background:var(--amber-l);color:var(--amber-d)" onclick="setTheme('Probabilidade')">Probabilidade</button>
+          <button class="qtag" style="background:var(--purple-l);color:var(--purple-d)" onclick="setTheme('Segunda Guerra Mundial')">2ª Guerra Mundial</button>
+          <button class="qtag" style="background:var(--pink-l);color:var(--pink-d)" onclick="setTheme('Ditadura Militar brasileira')">Ditadura Militar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PDF -->
+    <div class="upload-panel" id="tab-pdf">
+      <div class="drop-zone" id="drop-pdf">
+        <input type="file" accept=".pdf" onchange="handleFile(this,'pdf')">
+        <span class="drop-icon"><i class="ti ti-file-type-pdf" style="font-size:40px;color:#D85A30"></i></span>
+        <div class="drop-title">Toque para selecionar um PDF</div>
+        <div class="drop-sub">ou arraste aqui · <strong>Máx. 10MB</strong></div>
+      </div>
+      <div class="file-preview" id="preview-pdf">
+        <i class="ti ti-file-type-pdf" style="font-size:24px;color:#D85A30"></i>
+        <span class="file-preview-name" id="name-pdf"></span>
+        <button class="file-remove" onclick="removeFile('pdf')"><i class="ti ti-x"></i></button>
+      </div>
+      <p style="font-size:12px;color:var(--text-3);margin-top:10px">⚠️ O texto do PDF será extraído automaticamente. PDFs escaneados podem não funcionar.</p>
+    </div>
+
+    <!-- TAB: IMAGEM -->
+    <div class="upload-panel" id="tab-imagem">
+      <div class="drop-zone" id="drop-img">
+        <input type="file" accept="image/*" onchange="handleFile(this,'img')">
+        <span class="drop-icon"><i class="ti ti-photo" style="font-size:40px;color:#7F77DD"></i></span>
+        <div class="drop-title">Toque para selecionar uma imagem</div>
+        <div class="drop-sub">Foto do caderno, slide, quadro · <strong>JPG, PNG</strong></div>
+      </div>
+      <div class="file-preview" id="preview-img">
+        <img id="img-thumb" style="width:48px;height:48px;object-fit:cover;border-radius:6px">
+        <span class="file-preview-name" id="name-img"></span>
+        <button class="file-remove" onclick="removeFile('img')"><i class="ti ti-x"></i></button>
+      </div>
+      <p style="font-size:12px;color:var(--text-3);margin-top:10px">💡 Foto do caderno, printscreen de slide, foto de livro ou quadro-negro.</p>
+    </div>
+
+    <!-- TAB: TXT -->
+    <div class="upload-panel" id="tab-txt">
+      <div class="drop-zone" id="drop-txt">
+        <input type="file" accept=".txt,.md" onchange="handleFile(this,'txt')">
+        <span class="drop-icon"><i class="ti ti-file-text" style="font-size:40px;color:#1D9E75"></i></span>
+        <div class="drop-title">Toque para selecionar um arquivo de texto</div>
+        <div class="drop-sub">.txt · .md · <strong>Máx. 5MB</strong></div>
+      </div>
+      <div class="file-preview" id="preview-txt">
+        <i class="ti ti-file-text" style="font-size:24px;color:#1D9E75"></i>
+        <span class="file-preview-name" id="name-txt"></span>
+        <button class="file-remove" onclick="removeFile('txt')"><i class="ti ti-x"></i></button>
+      </div>
+    </div>
+
+    <!-- TECHNIQUES -->
+    <div style="margin:20px 0">
+      <div style="font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:8px">Técnicas a aplicar:</div>
+      <div class="quick-tags" id="tech-tags">
+        <button class="qtag tech-tag selected" style="background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)" data-tech="visao">📌 Visão Geral</button>
+        <button class="qtag tech-tag selected" style="background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)" data-tech="historia">🧠 História</button>
+        <button class="qtag tech-tag selected" style="background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)" data-tech="neuro">🔗 Neuroassociação</button>
+        <button class="qtag tech-tag selected" style="background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)" data-tech="micro">📚 Microlearning</button>
+        <button class="qtag tech-tag selected" style="background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)" data-tech="mnem">⚡ Mnemônico</button>
+        <button class="qtag tech-tag selected" style="background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)" data-tech="quiz">❓ Quiz</button>
+        <button class="qtag tech-tag selected" style="background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)" data-tech="revisao">🔄 Revisão</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="process-btn" onclick="processContent()" style="font-size:15px;padding:14px">
+      <i class="ti ti-sparkles"></i> Processar com 12 técnicas
+    </button>
+
+    <!-- OUTPUT -->
+    <div id="output-block" class="output-block" style="margin-top:32px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <h2 style="font-size:18px;font-weight:600" id="output-title">Resultado</h2>
+        <button class="copy-btn" onclick="copyAll()"><i class="ti ti-copy"></i> Copiar tudo</button>
+      </div>
+      <div id="output-content"></div>
+    </div>
+
+  </div>
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// ── CONFIG ──
+const GROQ_KEY = 'COLE_SUA_CHAVE_GROQ_AQUI';
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+
+// ── PDF.js ──
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// ── TABS ──
+function switchUploadTab(id, btn) {
+  document.querySelectorAll('.upload-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.upload-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+  currentFile = null; currentFileType = null;
+}
+
+// ── FILES ──
+let currentFile = null, currentFileType = null;
+
+function handleFile(input, type) {
+  const file = input.files[0];
+  if (!file) return;
+  currentFile = file; currentFileType = type;
+  document.getElementById('preview-' + type).classList.add('show');
+  document.getElementById('name-' + type).textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+  if (type === 'img') {
+    const reader = new FileReader();
+    reader.onload = e => document.getElementById('img-thumb').src = e.target.result;
+    reader.readAsDataURL(file);
+  }
+}
+
+function removeFile(type) {
+  currentFile = null; currentFileType = null;
+  document.getElementById('preview-' + type).classList.remove('show');
+}
+
+async function readFileContent() {
+  if (!currentFile) return null;
+  if (currentFileType === 'txt') {
+    return new Promise(res => {
+      const r = new FileReader();
+      r.onload = e => res({ type: 'text', content: e.target.result });
+      r.readAsText(currentFile);
+    });
+  }
+  if (currentFileType === 'img') {
+    return new Promise(res => {
+      const r = new FileReader();
+      r.onload = e => res({ type: 'text', content: '[Imagem enviada — descreva o conteúdo visual desta imagem de estudo e processe como conteúdo ENEM]' });
+      r.readAsDataURL(currentFile);
+    });
+  }
+  if (currentFileType === 'pdf') {
+    return new Promise(async res => {
+      const r = new FileReader();
+      r.onload = async e => {
+        try {
+          const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
+          let text = '';
+          for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            text += content.items.map(s => s.str).join(' ') + '\n';
+          }
+          res({ type: 'text', content: text.trim() });
+        } catch { res({ type: 'text', content: '' }); }
+      };
+      r.readAsArrayBuffer(currentFile);
+    });
+  }
+}
+
+// ── TECH TAGS ──
+document.querySelectorAll('.tech-tag').forEach(tag => {
+  tag.addEventListener('click', () => {
+    tag.classList.toggle('selected');
+    if (tag.classList.contains('selected')) {
+      tag.style.cssText = 'background:var(--purple-l);color:var(--purple-d);border:1.5px solid var(--purple)';
+    } else {
+      tag.style.cssText = 'background:var(--bg-card);color:var(--text-2);border:1.5px solid var(--border-2)';
+    }
+  });
+});
+
+function setTheme(theme) { document.getElementById('user-input').value = theme; }
+
+// ── PROCESS ──
+async function processContent() {
+  const textInput = document.getElementById('user-input').value.trim();
+  const fileData = currentFile ? await readFileContent() : null;
+  if (!textInput && !fileData) { alert('Insira um tema, texto ou arquivo!'); return; }
+
+  const selected = [...document.querySelectorAll('.tech-tag.selected')].map(t => t.dataset.tech);
+  const btn = document.getElementById('process-btn');
+  btn.innerHTML = '<span class="spinner"></span> Processando...';
+  btn.disabled = true;
+
+  const content = fileData?.content ? `${fileData.content}\n\n${textInput}` : textInput;
+
+  const SYSTEM = `Você é um especialista em aprendizagem acelerada para o ENEM. Responda APENAS em JSON válido, sem markdown, sem texto fora do JSON. Formato: {"titulo":"Nome do tema","visao":"visão geral 3-4 frases","historia":"história memorável 4-6 frases","neuro":"3 neuroassociações sensoriais fortes","micro":["Nível 1 básico","Nível 2 intermediário","Nível 3 avançado","Nível 4 expert"],"mnem_palavra":"SIGLA","mnem_linhas":"L1\\nL2\\nL3","quiz":[{"q":"pergunta","opts":["A","B","C","D"],"corr":0,"exp":"explicação"},{"q":"pergunta","opts":["A","B","C","D"],"corr":1,"exp":"explicação"},{"q":"pergunta","opts":["A","B","C","D"],"corr":2,"exp":"explicação"}],"revisao_24h":"o que fazer","revisao_7d":"o que fazer","revisao_30d":"o que fazer","provas":["p1","p2","p3","p4","p5"]}`;
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GROQ_KEY
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        temperature: 0.7,
+        max_tokens: 2000,
+        messages: [
+          { role: 'system', content: SYSTEM },
+          { role: 'user', content: 'Processe para o ENEM com todas as técnicas de aprendizagem acelerada: ' + content }
+        ]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const text = data.choices?.[0]?.message?.content || '';
+    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderOutput(parsed, selected);
+  } catch(err) {
+    document.getElementById('output-block').classList.add('show');
+    document.getElementById('output-title').textContent = '⚠️ Erro';
+    document.getElementById('output-content').innerHTML = `<div class="card-default" style="color:var(--coral-d)">Erro: ${err.message}<br><br>Verifique sua chave Groq em <strong>console.groq.com</strong></div>`;
+  } finally {
+    btn.innerHTML = '<i class="ti ti-sparkles"></i> Processar com 12 técnicas';
+    btn.disabled = false;
+  }
+}
+
+function renderOutput(d, selected) {
+  document.getElementById('output-title').textContent = '✦ ' + (d.titulo || 'Resultado');
+  document.getElementById('output-block').classList.add('show');
+  let html = '';
+  if (selected.includes('visao') && d.visao) html += sec('📌 Visão Geral', `<div class="card-default">${d.visao}</div>`);
+  if (selected.includes('historia') && d.historia) html += sec('🧠 História Memorável', `<div class="card-story">${d.historia}</div>`);
+  if (selected.includes('neuro') && d.neuro) html += sec('🔗 Neuroassociação', `<div class="card-neuro">${d.neuro}</div>`);
+  if (selected.includes('micro') && d.micro) html += sec('📚 Microlearning', `<div class="micro-steps">${d.micro.map(m=>`<div class="micro-step">${m}</div>`).join('')}</div>`);
+  if (selected.includes('mnem') && d.mnem_palavra) html += sec('⚡ Mnemônico', `<div class="card-mnemonic"><div class="mnem-word">${d.mnem_palavra}</div><div class="mnem-lines">${(d.mnem_linhas||'').replace(/\\n|\n/g,'<br>')}</div></div>`);
+  if (d.provas) html += sec('🎯 O que mais cai', `<div class="card-proof"><h4>Pontos prioritários:</h4><ul>${d.provas.map(p=>`<li>${p}</li>`).join('')}</ul></div>`);
+  if (selected.includes('quiz') && d.quiz) html += sec('❓ Quiz', d.quiz.map((q,qi)=>`
+    <div style="margin-bottom:20px">
+      <div class="quiz-question" style="font-size:15px;margin-bottom:12px">${qi+1}. ${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,oi)=>`<button class="quiz-opt" onclick="dynAnswer(this,${oi===q.corr},'${(q.exp||'').replace(/'/g,"&#39;")}')">${String.fromCharCode(65+oi)}) ${o}</button>`).join('')}</div>
+      <div class="quiz-feedback" id="qfb-${qi}"></div>
+    </div>`).join(''));
+  if (selected.includes('revisao')) html += sec('🔄 Revisão Espaçada', `<div class="revision-grid"><div class="rev-card r1"><div class="rev-day">24h</div><div class="rev-tip">${d.revisao_24h||''}</div></div><div class="rev-card r2"><div class="rev-day">7 dias</div><div class="rev-tip">${d.revisao_7d||''}</div></div><div class="rev-card r3"><div class="rev-day">30 dias</div><div class="rev-tip">${d.revisao_30d||''}</div></div></div>`);
+  document.getElementById('output-content').innerHTML = html;
+  document.getElementById('output-block').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function sec(title, content) { return `<div class="result-section"><h3>${title}</h3>${content}</div>`; }
+
+function dynAnswer(btn, correct, exp) {
+  btn.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(o => o.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  const fb = btn.closest('div').nextElementSibling;
+  fb.className = 'quiz-feedback show ' + (correct?'ok':'no');
+  fb.textContent = (correct?'✅ Correto! ':'❌ Incorreto. ') + exp;
+}
+
+function copyAll() {
+  navigator.clipboard.writeText(document.getElementById('output-content').innerText).then(()=>{
+    const b = document.querySelector('.copy-btn');
+    b.innerHTML='<i class="ti ti-check"></i> Copiado!';
+    setTimeout(()=>b.innerHTML='<i class="ti ti-copy"></i> Copiar tudo',2000);
+  });
+}
+</script>
+</body>
+</html>

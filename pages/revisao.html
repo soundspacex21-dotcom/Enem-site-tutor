@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisão — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark">E</div><div class="logo-text"><span class="logo-title">ENEM</span><span class="logo-sub">Acelerado</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="flashcards.html" class="nav-item"><i class="ti ti-cards"></i><span>Flashcards</span></a>
+    <a href="quiz.html" class="nav-item"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item active"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item"><i class="ti ti-calendar"></i><span>Planner</span></a>
+    <a href="tutor.html" class="nav-item"><i class="ti ti-school"></i><span>Tutor ENEM</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="progress-summary"><div class="ps-label">Progresso geral</div><div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div><div class="ps-pct" id="global-pct">0%</div></div></div>
+</aside>
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Revisão Espaçada</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1>Plano de Revisão Espaçada</h1>
+    <p>Baseado na Curva do Esquecimento de Ebbinghaus. Revise no momento certo para reter até 90% do conteúdo.</p>
+  </div>
+
+  <div class="revision-grid">
+    <div class="rev-card r1">
+      <div class="rev-day">⏰ 24 horas</div>
+      <div class="rev-title">Revisão Rápida</div>
+      <div class="rev-tip">Releia o resumo mestre. Explique o tema em voz alta sem olhar. Refaça o mnemônico de memória.</div>
+    </div>
+    <div class="rev-card r2">
+      <div class="rev-day">📅 7 dias</div>
+      <div class="rev-title">Revisão Média</div>
+      <div class="rev-tip">Refaça o quiz. Recrie o mapa mental. Explique para alguém ou para o espelho.</div>
+    </div>
+    <div class="rev-card r3">
+      <div class="rev-day">🗓️ 30 dias</div>
+      <div class="rev-title">Revisão Profunda</div>
+      <div class="rev-tip">Reescreva o conteúdo de memória. Resolva questões antigas do ENEM sobre o tema.</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Por que a repetição espaçada funciona?</h2>
+    <div class="micro-steps">
+      <div class="micro-step"><strong>🧠 Curva do Esquecimento (Ebbinghaus):</strong> Sem revisão, esquecemos ~70% do conteúdo em 24 horas. Com revisão espaçada, retemos até 90% após 30 dias.</div>
+      <div class="micro-step"><strong>🔁 Reconsolidação da Memória:</strong> Cada revisão reconsolida a memória de forma mais profunda no hipocampo, transferindo-a da memória de curto para longo prazo.</div>
+      <div class="micro-step"><strong>⚡ Efeito de Teste:</strong> Revisar através de perguntas (recuperação ativa) é 2x mais eficaz do que reler passivamente o mesmo conteúdo.</div>
+      <div class="micro-step"><strong>🎯 Intervalo ideal:</strong> Revisar quando você está prestes a esquecer — não antes (ineficiente) nem depois (perdeu a memória). O intervalo 24h/7d/30d é calibrado para esse ponto.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Tópicos para revisar hoje</h2>
+    <div id="review-today"></div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Resumo Mestre — Todas as matérias</h2>
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab(event,'rm-hum')">🌍 Humanas</button>
+      <button class="tab-btn" onclick="switchTab(event,'rm-nat')">⚗️ Natureza</button>
+      <button class="tab-btn" onclick="switchTab(event,'rm-mat')">📐 Matemática</button>
+      <button class="tab-btn" onclick="switchTab(event,'rm-lin')">✍️ Linguagens</button>
+      <button class="tab-btn" onclick="switchTab(event,'rm-red')">📝 Redação</button>
+    </div>
+
+    <div id="rm-hum" class="tab-pane active">
+      <div class="card-default" style="font-family:monospace;font-size:13px;line-height:2;white-space:pre-wrap">CIÊNCIAS HUMANAS ─ RESUMO MESTRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HISTÓRIA              GEOGRAFIA           FILOSOFIA/SOCIOLOGIA
+──────────            ──────────          ────────────────────
+Rev. Industrial       Globalização        Iluminismo (LRVM)
+2ª Guerra Mundial     Urbanização BR      Marx = luta de classes
+Guerra Fria           Biomas brasileiros  Durkheim = fato social
+Ditadura Militar      Geopolítica atual   Weber = ação racional
+Nazismo/Fascismo      Desigualdades       Contrato Social
+
+MNEMÔNICOS:
+CAME: Censura → AI-5 → Milagre → Eleição (Ditadura)
+MDW: Marx / Durkheim / Weber
+LRVM: Locke / Rousseau / Voltaire / Montesquieu
+
+PERGUNTA-CHAVE DO ENEM:
+"Como esse evento do passado explica o que vemos hoje?"</div>
+    </div>
+
+    <div id="rm-nat" class="tab-pane">
+      <div class="card-default" style="font-family:monospace;font-size:13px;line-height:2;white-space:pre-wrap">CIÊNCIAS DA NATUREZA ─ RESUMO MESTRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FÍSICA                QUÍMICA             BIOLOGIA
+──────────            ──────────          ──────────
+Leis de Newton        Tabela periódica    DNA → RNA → Proteína
+MRU: d = v·t          Ligações iônicas    Mitose (2 células 2n)
+MRUV: v = v₀ + at     e covalentes        Meiose (4 células n)
+Energia: Ec=mv²/2     Reações de          Fotossíntese
+Ondas e óptica        combustão           Cadeia alimentar
+Termologia            pH ácido/básico     Biomas brasileiros
+
+MNEMÔNICO INA (Newton):
+I — Inércia (1ª lei)
+N — Newton F=ma (2ª lei)  
+A — Ação e reação (3ª lei)
+
+FOTOSSÍNTESE: 6CO₂ + 6H₂O + luz → C₆H₁₂O₆ + 6O₂</div>
+    </div>
+
+    <div id="rm-mat" class="tab-pane">
+      <div class="card-default" style="font-family:monospace;font-size:13px;line-height:2;white-space:pre-wrap">MATEMÁTICA ─ RESUMO MESTRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ÁLGEBRA               GEOMETRIA           ESTATÍSTICA
+──────────            ──────────          ──────────
+Bhaskara: Δ=b²-4ac    Triângulo: b·h/2    Média, mediana, moda
+x = (-b ± √Δ) / 2a   Círculo: πr²        Histograma, boxplot
+Juros: M=C(1+i)^t     Pitágoras: a²=b²+c² Probabilidade:
+PA: aₙ=a₁+(n-1)r      Cubo: a³            P = fav / total
+PG: aₙ=a₁·q^(n-1)    Cilindro: πr²h      
+
+BHASKARA MNEMÔNICO:
+"Bom aluno Há que calcular Assim: sinal menos b
+ mais ou menos raiz de b² menos quatro ac
+ dividido por dois a"</div>
+    </div>
+
+    <div id="rm-lin" class="tab-pane">
+      <div class="card-default" style="font-family:monospace;font-size:13px;line-height:2;white-space:pre-wrap">LINGUAGENS ─ RESUMO MESTRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ESCOLAS LITERÁRIAS    FIGURAS             FUNÇÕES DA LINGUAGEM
+──────────────────    ──────────          ────────────────────
+Barroco (dualismo)    Metáfora            Referencial (informar)
+Romantismo (emoção)   Metonímia           Emotiva (sentimentos)
+Realismo (crítica)    Hipérbole           Conativa (persuadir)
+Modernismo (ruptura)  Ironia              Fática (contato)
+                      Eufemismo           Metalinguística
+
+MNEMÔNICO: BRRM-P
+Barroco / Romantismo / Realismo / Modernismo / Pós-moderno
+
+ESTRATÉGIA DE PROVA:
+1. Leia o enunciado ANTES do texto
+2. Identifique: tema + recurso + intenção
+3. Elimine alternativas pelo contexto</div>
+    </div>
+
+    <div id="rm-red" class="tab-pane">
+      <div class="card-default" style="font-family:monospace;font-size:13px;line-height:2;white-space:pre-wrap">REDAÇÃO ─ RESUMO MESTRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ESTRUTURA             5 COMPETÊNCIAS      PROPOSTA INTERVENÇÃO
+──────────────────    ──────────────      ────────────────────
+Introdução (tese)     C1: Norma culta     AGENTE (quem age)
+Desenvolvimento 1     C2: Tema/proposta   AÇÃO (o que fazer)
+Desenvolvimento 2     C3: Argumentação    MEIO (como fazer)
+Conclusão+proposta    C4: Coesão          FINALIDADE (para quê)
+                      C5: Intervenção     EFEITO (resultado)
+
+MNEMÔNICO TADIC:
+T — Tese (introdução)
+A — Argumento 1 + dado
+D — Desenvolvimento 2
+I — Intervenção completa
+C — Conclusão retomando
+
+CONECTIVOS ESSENCIAIS:
+Causa: porque, pois, visto que
+Consequência: portanto, logo, assim
+Concessão: embora, apesar de, ainda que
+Adição: além disso, ademais, outrossim</div>
+    </div>
+  </section>
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script>
+function switchTab(e, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// Show topics studied more than 24h ago
+const studied = JSON.parse(localStorage.getItem('studied') || '[]');
+const reviewDiv = document.getElementById('review-today');
+if (studied.length === 0) {
+  reviewDiv.innerHTML = '<div class="card-default" style="color:var(--text-2)">Você ainda não marcou tópicos como estudados. <a href="materias.html" style="color:var(--purple)">Comece a estudar →</a></div>';
+} else {
+  reviewDiv.innerHTML = `
+    <div class="topic-grid">
+      ${studied.map(s => {
+        const [area, id] = s.split('-');
+        return `<div class="topic-card">
+          <span class="topic-name">${area} · ${id}</span>
+          <span class="badge badge-hot">Revisar</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+</script>
+</body>
+</html>

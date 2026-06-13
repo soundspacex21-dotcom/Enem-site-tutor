@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutor ENEM — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+.chat-wrap { display:flex; flex-direction:column; height:calc(100vh - 120px); max-width:720px; }
+.chat-messages { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:16px; padding-bottom:16px; }
+.msg { display:flex; gap:10px; align-items:flex-start; }
+.msg.user { flex-direction:row-reverse; }
+.msg-avatar {
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+.msg.bot .msg-avatar { background:var(--purple-l); }
+.msg.user .msg-avatar { background:var(--teal-l); }
+.msg-bubble {
+  max-width:80%; padding:12px 16px; border-radius:16px;
+  font-size:14px; line-height:1.7; color:var(--text);
+}
+.msg.bot .msg-bubble {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-top-left-radius:4px;
+}
+.msg.user .msg-bubble {
+  background:var(--purple); color:white;
+  border-top-right-radius:4px;
+}
+.msg-bubble p { margin-bottom:8px; }
+.msg-bubble p:last-child { margin-bottom:0; }
+.msg-bubble strong { font-weight:600; }
+.msg-bubble em { font-style:italic; }
+
+.chat-input-area {
+  border-top:1px solid var(--border);
+  padding-top:16px; margin-top:8px;
+}
+.chat-input-wrap {
+  display:flex; gap:10px; align-items:flex-end;
+}
+.chat-input {
+  flex:1; padding:12px 16px;
+  border:1.5px solid var(--border-2);
+  border-radius:var(--radius);
+  background:var(--bg-card); color:var(--text);
+  font-family:var(--font); font-size:14px;
+  resize:none; min-height:48px; max-height:140px;
+  transition:border-color .15s; line-height:1.5;
+}
+.chat-input:focus { outline:none; border-color:var(--purple); }
+.chat-send {
+  width:48px; height:48px; border-radius:var(--radius);
+  background:var(--purple); color:white; border:none;
+  cursor:pointer; font-size:20px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .15s;
+}
+.chat-send:hover { opacity:0.85; }
+.chat-send:disabled { opacity:0.5; cursor:default; }
+
+.quick-questions { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+.qq-btn {
+  padding:6px 12px; border-radius:20px; font-size:12px;
+  border:1px solid var(--border-2); background:var(--bg-card);
+  color:var(--text-2); cursor:pointer; transition:all .15s;
+}
+.qq-btn:hover { border-color:var(--purple); color:var(--purple); background:var(--purple-l); }
+
+.typing { display:flex; gap:4px; align-items:center; padding:4px 0; }
+.typing span {
+  width:7px; height:7px; background:var(--text-3);
+  border-radius:50%; animation:bounce 1.2s infinite;
+}
+.typing span:nth-child(2) { animation-delay:.2s; }
+.typing span:nth-child(3) { animation-delay:.4s; }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+.spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark">E</div><div class="logo-text"><span class="logo-title">ENEM</span><span class="logo-sub">Acelerado</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="flashcards.html" class="nav-item"><i class="ti ti-cards"></i><span>Flashcards</span></a>
+    <a href="quiz.html" class="nav-item"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item"><i class="ti ti-calendar"></i><span>Planner</span></a>
+    <a href="tutor.html" class="nav-item active"><i class="ti ti-school"></i><span>Tutor ENEM</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="progress-summary"><div class="ps-label">Progresso geral</div><div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div><div class="ps-pct" id="global-pct">0%</div></div></div>
+</aside>
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Tutor ENEM</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content" style="padding-bottom:0">
+  <div class="page-header" style="margin-bottom:16px">
+    <h1>Tutor ENEM</h1>
+    <p>Pergunte qualquer coisa sobre o ENEM — explico com história, mnemônico e analogias.</p>
+  </div>
+
+  <div class="quick-questions" id="quick-q">
+    <button class="qq-btn" onclick="sendQuick('Como funciona a Revolução Industrial?')">Revolução Industrial</button>
+    <button class="qq-btn" onclick="sendQuick('Explique as Leis de Newton com exemplos do dia a dia')">Leis de Newton</button>
+    <button class="qq-btn" onclick="sendQuick('Qual a diferença entre mitose e meiose?')">Mitose vs Meiose</button>
+    <button class="qq-btn" onclick="sendQuick('Como fazer uma redação nota 1000 no ENEM?')">Redação nota 1000</button>
+    <button class="qq-btn" onclick="sendQuick('O que é o Iluminismo e quais seus principais filósofos?')">Iluminismo</button>
+    <button class="qq-btn" onclick="sendQuick('Como calcular probabilidade no ENEM?')">Probabilidade</button>
+    <button class="qq-btn" onclick="sendQuick('Explique a fotossíntese de forma simples')">Fotossíntese</button>
+    <button class="qq-btn" onclick="sendQuick('O que foi a Ditadura Militar brasileira?')">Ditadura Militar</button>
+    <button class="qq-btn" onclick="sendQuick('Como resolver equação do 2° grau com Bhaskara?')">Bhaskara</button>
+    <button class="qq-btn" onclick="sendQuick('Quais são as figuras de linguagem mais cobradas no ENEM?')">Figuras de linguagem</button>
+  </div>
+
+  <div class="chat-wrap">
+    <div class="chat-messages" id="chat-messages">
+      <!-- Welcome message -->
+      <div class="msg bot">
+        <div class="msg-avatar">🎓</div>
+        <div class="msg-bubble">
+          <p>Olá! Sou seu Tutor ENEM. Posso explicar qualquer matéria usando histórias memoráveis, mnemônicos e analogias simples.</p>
+          <p>Escolha um tema rápido acima ou me faça qualquer pergunta sobre o ENEM! 🚀</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="chat-input-wrap">
+        <textarea class="chat-input" id="chat-input" placeholder="Digite sua dúvida sobre o ENEM..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
+          oninput="autoResize(this)"></textarea>
+        <button class="chat-send" id="send-btn" onclick="sendMessage()">
+          <i class="ti ti-send"></i>
+        </button>
+      </div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:6px;text-align:center">
+        Enter para enviar · Shift+Enter para nova linha
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script>
+const GROQ_KEY = 'COLE_SUA_CHAVE_GROQ_AQUI';
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+
+const SYSTEM_TUTOR = `Você é um tutor especialista no ENEM, carismático e didático. Seu estilo de ensino usa obrigatoriamente:
+1. Analogias simples e do cotidiano
+2. Histórias memoráveis curtas quando relevante
+3. Mnemônicos quando houver lista para memorizar
+4. Linguagem jovem, animada e encorajadora
+5. Exemplos práticos sempre
+6. Emojis com moderação para destacar pontos importantes
+
+Formate suas respostas em parágrafos curtos e claros. Use **negrito** para termos importantes. Seja direto e objetivo. Máximo 400 palavras por resposta. Sempre termine com uma dica de prova ou pergunta reflexiva para o aluno.`;
+
+let history = [];
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function addMessage(role, text) {
+  const container = document.getElementById('chat-messages');
+  const isBot = role === 'bot';
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = `
+    <div class="msg-avatar">${isBot ? '🎓' : '👤'}</div>
+    <div class="msg-bubble">${formatText(text)}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function addTyping() {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typing-indicator';
+  div.innerHTML = `<div class="msg-avatar">🎓</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+function formatText(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^/, '<p>').replace(/$/, '</p>');
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('quick-q').style.display = 'none';
+
+  addMessage('user', text);
+  history.push({ role: 'user', content: text });
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  addTyping();
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GROQ_KEY
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        temperature: 0.75,
+        max_tokens: 600,
+        messages: [
+          { role: 'system', content: SYSTEM_TUTOR },
+          ...history
+        ]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const reply = data.choices?.[0]?.message?.content || '';
+    history.push({ role: 'assistant', content: reply });
+    removeTyping();
+    addMessage('bot', reply);
+  } catch(err) {
+    removeTyping();
+    addMessage('bot', `⚠️ Erro: ${err.message}. Verifique sua chave Groq em **console.groq.com**`);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-send"></i>';
+  }
+}
+
+function sendQuick(text) {
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+</script>
+</body>
+</html>

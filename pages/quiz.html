@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark">E</div><div class="logo-text"><span class="logo-title">ENEM</span><span class="logo-sub">Acelerado</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="flashcards.html" class="nav-item"><i class="ti ti-cards"></i><span>Flashcards</span></a>
+    <a href="quiz.html" class="nav-item active"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item"><i class="ti ti-calendar"></i><span>Planner</span></a>
+    <a href="tutor.html" class="nav-item"><i class="ti ti-school"></i><span>Tutor ENEM</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="progress-summary"><div class="ps-label">Progresso geral</div><div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div><div class="ps-pct" id="global-pct">0%</div></div></div>
+</aside>
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Quiz</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1>Quiz de Recuperação Ativa</h1>
+    <p>Teste seus conhecimentos com questões no estilo ENEM. Recuperação ativa é a técnica de retenção mais poderosa.</p>
+  </div>
+
+  <div class="info-grid" style="margin-bottom:28px">
+    <div class="info-card"><div class="info-card-label">Pontuação</div><div class="info-card-value" id="score-val">0</div><div class="info-card-sub">pontos</div></div>
+    <div class="info-card"><div class="info-card-label">Acertos</div><div class="info-card-value" id="correct-val">0</div><div class="info-card-sub">de <span id="total-val">0</span> respondidas</div></div>
+    <div class="info-card"><div class="info-card-label">Sequência</div><div class="info-card-value" id="streak-val">0</div><div class="info-card-sub">acertos seguidos 🔥</div></div>
+  </div>
+
+  <div class="filter-bar" id="category-filter" style="margin-bottom:24px">
+    <button class="filter-btn active" onclick="setCategory('all',this)">Todas as matérias</button>
+    <button class="filter-btn" onclick="setCategory('humanas',this)">🌍 Humanas</button>
+    <button class="filter-btn" onclick="setCategory('natureza',this)">⚗️ Natureza</button>
+    <button class="filter-btn" onclick="setCategory('matematica',this)">📐 Matemática</button>
+    <button class="filter-btn" onclick="setCategory('linguagens',this)">✍️ Linguagens</button>
+    <button class="filter-btn" onclick="setCategory('redacao',this)">📝 Redação</button>
+  </div>
+
+  <div class="quiz-wrap">
+    <div id="quiz-area"></div>
+  </div>
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script>
+const ALL_QUESTIONS = [
+  { cat:'humanas', q:'Qual lei foi responsável pelo período mais brutal da Ditadura Militar brasileira, suspendendo direitos individuais e permitindo censura total?', opts:['AI-1','AI-2','AI-5','Lei de Segurança Nacional'], corr:2, exp:'O Ato Institucional nº 5 (1968) fechou o Congresso, suspendeu direitos individuais e permitiu prisão sem mandado. Foi o auge do autoritarismo da ditadura.' },
+  { cat:'humanas', q:'Para Marx, o que é mais-valia?', opts:['O lucro do Estado','O valor que o trabalhador produz além do necessário para cobrir seu salário','O salário mínimo pago aos trabalhadores','O capital investido pelo empresário'], corr:1, exp:'Mais-valia é a diferença entre o valor que o trabalhador produz e o que recebe como salário. Essa diferença fica com o capitalista — base da exploração segundo Marx.' },
+  { cat:'humanas', q:'Segundo Montesquieu, quais são os três poderes do Estado?', opts:['Real, Eclesiástico e Popular','Executivo, Legislativo e Judiciário','Federal, Estadual e Municipal','Militar, Civil e Religioso'], corr:1, exp:'Montesquieu propôs a tripartição dos poderes em "O Espírito das Leis" (1748): Executivo, Legislativo e Judiciário — base das democracias modernas.' },
+  { cat:'natureza', q:'Qual lei de Newton explica por que você sente um "solavanco para frente" quando um carro freia bruscamente?', opts:['1ª Lei — Inércia','2ª Lei — F=ma','3ª Lei — Ação e reação','Lei de Hooke'], corr:0, exp:'A 1ª Lei (Inércia) diz que um corpo em movimento tende a continuar em movimento. Quando o carro freia, seu corpo quer continuar se movendo — por isso vai para frente.' },
+  { cat:'natureza', q:'Qual é o processo pelo qual as plantas produzem glicose usando luz solar, CO₂ e água?', opts:['Respiração celular','Fermentação','Fotossíntese','Quimiossíntese'], corr:2, exp:'Fotossíntese: 6CO₂ + 6H₂O + energia luminosa → C₆H₁₂O₆ + 6O₂. As plantas convertem energia solar em energia química armazenada na glicose.' },
+  { cat:'natureza', q:'Na tabela periódica, os elementos de um mesmo GRUPO (coluna vertical) compartilham:', opts:['O mesmo número de nêutrons','O mesmo número de camadas eletrônicas','O mesmo número de elétrons na camada de valência','A mesma massa atômica'], corr:2, exp:'Elementos do mesmo grupo têm o mesmo número de elétrons na camada de valência, o que explica suas propriedades químicas semelhantes.' },
+  { cat:'matematica', q:'Se lançarmos um dado justo, qual a probabilidade de sair número PAR?', opts:['1/6','1/3','1/2','2/3'], corr:2, exp:'Números pares em um dado: 2, 4, 6 — são 3 casos. Total: 6 faces. Probabilidade = 3/6 = 1/2 = 50%.' },
+  { cat:'matematica', q:'A equação 2x² - 8x + 6 = 0 tem discriminante Δ igual a:', opts:['4','16','28','36'], corr:1, exp:'Δ = b² - 4ac = (-8)² - 4·2·6 = 64 - 48 = 16. Como Δ > 0, a equação tem duas raízes reais e distintas.' },
+  { cat:'linguagens', q:'O Modernismo brasileiro foi marcado pela Semana de Arte Moderna, que ocorreu em:', opts:['1888','1908','1922','1945'], corr:2, exp:'A Semana de Arte Moderna de 1922 em São Paulo foi o marco oficial do Modernismo brasileiro, com Oswald de Andrade, Mário de Andrade e outros artistas.' },
+  { cat:'linguagens', q:'A figura de linguagem que consiste em exprimir uma ideia através de outra, sugerindo comparação, sem usar "como" é:', opts:['Metonímia','Hipérbole','Metáfora','Eufemismo'], corr:2, exp:'Metáfora é uma comparação implícita (sem "como" ou "tal qual"). Ex: "Seus olhos são estrelas" — diferente da comparação "seus olhos são como estrelas".' },
+  { cat:'redacao', q:'A proposta de intervenção perfeita no ENEM deve conter quantos elementos?', opts:['2','3','4','5'], corr:3, exp:'São 5 elementos: Agente (quem), Ação (o quê), Meio/modo (como), Finalidade (para quê) e Efeito esperado (resultado). Todos presentes = 200 pontos na C5.' },
+  { cat:'redacao', q:'Qual das competências avaliadas na Redação do ENEM está relacionada ao domínio da norma culta da língua portuguesa?', opts:['Competência 2','Competência 1','Competência 4','Competência 5'], corr:1, exp:'A Competência 1 avalia o domínio da modalidade escrita formal da língua portuguesa: ortografia, pontuação, concordância, regência e morfossintaxe.' },
+  { cat:'humanas', q:'A Guerra Fria foi chamada de "fria" porque:', opts:['As batalhas ocorreram em regiões árticas','Nunca houve confronto militar direto entre EUA e URSS','As armas usadas eram de gelo','Os dois lados usavam estratégias diplomáticas apenas'], corr:1, exp:'A Guerra Fria (1947–1991) foi uma tensão ideológica, política e militar entre EUA (capitalismo) e URSS (socialismo) que nunca resultou em guerra direta entre as duas potências.' },
+  { cat:'natureza', q:'A mitose é um tipo de divisão celular que resulta em:', opts:['2 células com metade dos cromossomos','4 células idênticas à original','2 células geneticamente idênticas à célula-mãe','4 células com cromossomos recombinados'], corr:2, exp:'Mitose: 1 célula diplóide (2n) → 2 células diplóides idênticas (2n). É usada para crescimento e regeneração. A meiose é que produz células com metade dos cromossomos (1n).' },
+  { cat:'matematica', q:'Qual fórmula representa os juros compostos, onde M é o montante, C o capital, i a taxa e t o tempo?', opts:['M = C + C·i·t','M = C·(1+i)^t','M = C·i·t','M = C/(1+i)^t'], corr:1, exp:'Juros compostos: M = C·(1+i)^t — o juro é calculado sobre o montante acumulado (juros sobre juros). É o mais usado no mercado financeiro.' },
+];
+
+let questions = [...ALL_QUESTIONS];
+let idx = 0, score = 0, correct = 0, total = 0, streak = 0;
+let answered = false;
+let category = 'all';
+
+function setCategory(cat, btn) {
+  category = cat;
+  document.querySelectorAll('#category-filter .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  questions = cat === 'all' ? [...ALL_QUESTIONS] : ALL_QUESTIONS.filter(q => q.cat === cat);
+  shuffle(questions);
+  idx = 0; score = 0; correct = 0; total = 0; streak = 0;
+  updateStats();
+  renderQuestion();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function updateStats() {
+  document.getElementById('score-val').textContent = score;
+  document.getElementById('correct-val').textContent = correct;
+  document.getElementById('total-val').textContent = total;
+  document.getElementById('streak-val').textContent = streak;
+}
+
+function renderQuestion() {
+  if (!questions.length) {
+    document.getElementById('quiz-area').innerHTML = `<div class="card-default" style="text-align:center;padding:40px">
+      <div style="font-size:40px;margin-bottom:12px">😕</div>
+      <p style="font-size:15px">Nenhuma questão nesta categoria ainda.</p>
+      <button class="btn btn-primary" style="margin-top:16px" onclick="setCategory('all',document.querySelector('.filter-btn'))">Ver todas as matérias</button>
+    </div>`;
+    return;
+  }
+  if (idx >= questions.length) {
+    shuffle(questions);
+    idx = 0;
+  }
+  const q = questions[idx];
+  answered = false;
+  const pct = Math.round((idx / questions.length) * 100);
+  const catLabels = { humanas:'🌍 Humanas', natureza:'⚗️ Natureza', matematica:'📐 Matemática', linguagens:'✍️ Linguagens', redacao:'📝 Redação' };
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+    <div class="quiz-counter">${catLabels[q.cat]} · Questão ${idx+1} de ${questions.length}</div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options">
+      ${q.opts.map((o,i) => `<button class="quiz-opt" onclick="answer(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="qfb"></div>
+    <div class="quiz-actions">
+      <button class="btn btn-outline" onclick="skipQ()"><i class="ti ti-arrow-right"></i> Pular</button>
+      <button class="btn btn-primary" id="next-btn" style="display:none" onclick="nextQ()">Próxima <i class="ti ti-arrow-right"></i></button>
+    </div>`;
+}
+
+function answer(chosen) {
+  if (answered) return;
+  answered = true;
+  total++;
+  const q = questions[idx];
+  document.querySelectorAll('.quiz-opt').forEach((o, i) => {
+    if (i === q.corr) o.classList.add('correct');
+    else if (i === chosen) o.classList.add('wrong');
+    o.disabled = true;
+  });
+  const correct_ans = chosen === q.corr;
+  if (correct_ans) { score += 10; correct++; streak++; }
+  else { streak = 0; }
+  updateStats();
+  const fb = document.getElementById('qfb');
+  fb.className = 'quiz-feedback show ' + (correct_ans ? 'ok' : 'no');
+  fb.innerHTML = (correct_ans ? '✅ Correto! ' : '❌ Incorreto. ') + q.exp;
+  document.getElementById('next-btn').style.display = 'inline-flex';
+}
+
+function nextQ() { idx++; renderQuestion(); }
+function skipQ() { idx++; renderQuestion(); }
+
+shuffle(questions);
+renderQuestion();
+</script>
+</body>
+</html>

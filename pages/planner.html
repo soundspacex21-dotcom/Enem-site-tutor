@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planner — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+.planner-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.planner-month { font-size:16px; font-weight:600; }
+.planner-nav { display:flex; gap:8px; }
+.planner-nav button { width:32px; height:32px; border:1px solid var(--border-2); background:var(--bg-card); border-radius:var(--radius-sm); cursor:pointer; color:var(--text-2); font-size:16px; display:flex; align-items:center; justify-content:center; }
+.planner-nav button:hover { background:var(--bg-sub); }
+.task-list { display:flex; flex-direction:column; gap:8px; }
+.task-item { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); }
+.task-check { width:18px; height:18px; border-radius:4px; border:1.5px solid var(--border-2); cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.task-check.done { background:var(--teal); border-color:var(--teal); color:white; }
+.task-text { flex:1; font-size:14px; }
+.task-text.done { text-decoration:line-through; color:var(--text-3); }
+.task-del { width:24px; height:24px; border:none; background:none; color:var(--text-3); cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; border-radius:4px; }
+.task-del:hover { background:var(--coral-l); color:var(--coral-d); }
+.task-input-wrap { display:flex; gap:8px; margin-top:12px; }
+.task-input { flex:1; padding:10px 14px; border:1px solid var(--border-2); border-radius:var(--radius-sm); background:var(--bg-card); color:var(--text); font-family:var(--font); font-size:14px; }
+.task-input:focus { outline:none; border-color:var(--purple); }
+.area-badge { padding:2px 8px; border-radius:10px; font-size:11px; font-weight:500; }
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark">E</div><div class="logo-text"><span class="logo-title">ENEM</span><span class="logo-sub">Acelerado</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="flashcards.html" class="nav-item"><i class="ti ti-cards"></i><span>Flashcards</span></a>
+    <a href="quiz.html" class="nav-item"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item active"><i class="ti ti-calendar"></i><span>Planner</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="progress-summary"><div class="ps-label">Progresso geral</div><div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div><div class="ps-pct" id="global-pct">0%</div></div></div>
+</aside>
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Planner</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1>Planner de Estudos</h1>
+    <p>Organize sua rotina de estudos e acompanhe seus dias de estudo no calendário.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start" id="planner-layout">
+    <!-- Calendar -->
+    <div>
+      <div class="planner-header">
+        <span class="planner-month" id="cal-month"></span>
+        <div class="planner-nav">
+          <button onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+          <button onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+        </div>
+      </div>
+      <div class="planner-grid" id="cal-days-header"></div>
+      <div class="planner-grid" id="cal-grid"></div>
+      <div style="display:flex;gap:12px;margin-top:12px;font-size:12px;color:var(--text-2)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--purple);border-radius:50%;display:inline-block"></span> Hoje</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--purple-l);border:1px solid var(--purple);border-radius:2px;display:inline-block"></span> Estudado</span>
+      </div>
+    </div>
+
+    <!-- Tasks -->
+    <div>
+      <h2 style="font-size:16px;font-weight:600;margin-bottom:16px">📋 Tarefas de hoje</h2>
+      <div class="task-list" id="task-list"></div>
+      <div class="task-input-wrap">
+        <input class="task-input" id="task-input" placeholder="Adicionar tarefa de estudo..." onkeydown="if(event.key==='Enter')addTask()">
+        <button class="btn btn-primary" onclick="addTask()"><i class="ti ti-plus"></i></button>
+      </div>
+
+      <div style="margin-top:28px">
+        <h2 style="font-size:16px;font-weight:600;margin-bottom:12px">📊 Sugestão de cronograma</h2>
+        <div class="micro-steps">
+          <div class="micro-step"><strong>Segunda/Quinta:</strong> ✍️ Linguagens + 📝 Redação (treinar 1 dissertação)</div>
+          <div class="micro-step"><strong>Terça/Sexta:</strong> 🌍 Humanas (história → filosofia → sociologia)</div>
+          <div class="micro-step"><strong>Quarta/Sábado:</strong> ⚗️ Ciências da Natureza (física → química → biologia)</div>
+          <div class="micro-step"><strong>Todo dia:</strong> 📐 30 min de Matemática — não pule!</div>
+          <div class="micro-step"><strong>Domingo:</strong> 🔄 Revisão geral da semana + Quiz de todas as matérias</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script>
+let currentDate = new Date();
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+function renderCalendar() {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const today = new Date();
+  const studiedDays = JSON.parse(localStorage.getItem('studied_days') || '[]');
+
+  document.getElementById('cal-month').textContent = MONTHS[month] + ' ' + year;
+
+  // Headers
+  document.getElementById('cal-days-header').innerHTML = DAYS.map(d => `<div class="planner-day-header">${d}</div>`).join('');
+
+  const first = new Date(year, month, 1).getDay();
+  const days = new Date(year, month + 1, 0).getDate();
+  let html = '';
+  for (let i = 0; i < first; i++) html += '<div></div>';
+  for (let d = 1; d <= days; d++) {
+    const key = `${year}-${month+1}-${d}`;
+    const isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
+    const isStudied = studiedDays.includes(key);
+    html += `<div class="planner-cell ${isToday?'today':''} ${isStudied?'studied':''}" onclick="toggleDay('${key}',this)">${d}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function toggleDay(key, el) {
+  let days = JSON.parse(localStorage.getItem('studied_days') || '[]');
+  if (days.includes(key)) { days = days.filter(d => d !== key); el.classList.remove('studied'); }
+  else { days.push(key); el.classList.add('studied'); }
+  localStorage.setItem('studied_days', JSON.stringify(days));
+}
+
+function changeMonth(dir) {
+  currentDate.setMonth(currentDate.getMonth() + dir);
+  renderCalendar();
+}
+
+// Tasks
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem('tasks_today') || '[]');
+  const list = document.getElementById('task-list');
+  if (!tasks.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--text-3);padding:8px 0">Nenhuma tarefa ainda. Adicione abaixo!</div>';
+    return;
+  }
+  list.innerHTML = tasks.map((t, i) => `
+    <div class="task-item" id="task-${i}">
+      <div class="task-check ${t.done?'done':''}" onclick="toggleTask(${i})">${t.done?'<i class="ti ti-check" style="font-size:12px"></i>':''}</div>
+      <span class="task-text ${t.done?'done':''}">${t.text}</span>
+      <button class="task-del" onclick="deleteTask(${i})"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+}
+
+function addTask() {
+  const input = document.getElementById('task-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const tasks = JSON.parse(localStorage.getItem('tasks_today') || '[]');
+  tasks.push({ text, done: false });
+  localStorage.setItem('tasks_today', JSON.stringify(tasks));
+  input.value = '';
+  loadTasks();
+}
+
+function toggleTask(i) {
+  const tasks = JSON.parse(localStorage.getItem('tasks_today') || '[]');
+  tasks[i].done = !tasks[i].done;
+  localStorage.setItem('tasks_today', JSON.stringify(tasks));
+  loadTasks();
+}
+
+function deleteTask(i) {
+  const tasks = JSON.parse(localStorage.getItem('tasks_today') || '[]');
+  tasks.splice(i, 1);
+  localStorage.setItem('tasks_today', JSON.stringify(tasks));
+  loadTasks();
+}
+
+// Responsive
+function checkLayout() {
+  const layout = document.getElementById('planner-layout');
+  if (layout && window.innerWidth < 700) layout.style.gridTemplateColumns = '1fr';
+  else if (layout) layout.style.gridTemplateColumns = '1fr 1fr';
+}
+window.addEventListener('resize', checkLayout);
+checkLayout();
+renderCalendar();
+loadTasks();
+</script>
+</body>
+</html>

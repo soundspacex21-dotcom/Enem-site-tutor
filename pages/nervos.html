@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nervos Cranianos — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark">E</div><div class="logo-text"><span class="logo-title">ENEM</span><span class="logo-sub">Acelerado</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="flashcards.html" class="nav-item"><i class="ti ti-cards"></i><span>Flashcards</span></a>
+    <a href="quiz.html" class="nav-item"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item active"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item"><i class="ti ti-calendar"></i><span>Planner</span></a>
+    <a href="tutor.html" class="nav-item"><i class="ti ti-school"></i><span>Tutor ENEM</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="progress-summary"><div class="ps-label">Progresso geral</div><div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div><div class="ps-pct" id="global-pct">0%</div></div></div>
+</aside>
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Nervos Cranianos</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1>Os 12 Pares de Nervos Cranianos</h1>
+    <p>Base da aprendizagem multissensorial. Ative mais sentidos durante o estudo para multiplicar a retenção.</p>
+  </div>
+
+  <div class="nerve-grid" id="nerve-grid"></div>
+
+  <section class="section" style="margin-top:40px">
+    <h2 class="section-title">Como usar cada sentido nos estudos</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+
+      <div class="card-neuro" style="border-radius:var(--radius)">
+        <strong>👁️ Visual (Par I, II)</strong><br>
+        Desenhe mapas mentais com cores. Use uma cor por matéria. Crie imagens mentais absurdas e vívidas ligadas ao conteúdo. Quanto mais bizarro, mais fácil lembrar.
+      </div>
+      <div class="card-neuro" style="border-radius:var(--radius)">
+        <strong>👂 Auditivo (Par VIII)</strong><br>
+        Leia em voz alta — sua própria voz ativa mais circuitos neurais do que ler em silêncio. Grave e ouça. Ouça músicas da época ao estudar história.
+      </div>
+      <div class="card-neuro" style="border-radius:var(--radius)">
+        <strong>🤲 Motor (Par III, IV, VI, XI)</strong><br>
+        Escreva à mão — o gesto motor cria caminhos neurais diferentes do digitar. Gesticule ao explicar conceitos. Caminhe enquanto revisa oralmente.
+      </div>
+      <div class="card-neuro" style="border-radius:var(--radius)">
+        <strong>👃 Olfativo (Par I)</strong><br>
+        Use um aroma específico por matéria: lavanda para Humanas, hortelã para Natureza, café para Matemática. Ao cheirar de novo, a memória volta instantaneamente.
+      </div>
+      <div class="card-neuro" style="border-radius:var(--radius)">
+        <strong>👅 Gustativo/Facial (Par VII, IX)</strong><br>
+        Mastigue um chiclete incomum ao estudar um tema difícil. O sabor diferente cria uma âncora sensorial. Faça expressões faciais ao aprender datas marcantes.
+      </div>
+      <div class="card-neuro" style="border-radius:var(--radius)">
+        <strong>🌬️ Vagal (Par X)</strong><br>
+        Respire profundamente 3x antes de estudar (ativa o nervo vago e reduz o cortisol). Pausa de 5 minutos a cada 25 minutos melhora a consolidação da memória.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Protocolo de estudo multissensorial</h2>
+    <div class="micro-steps">
+      <div class="micro-step"><strong>1. Prepare o ambiente (5 min):</strong> Escolha um aroma específico para a matéria. Respire fundo 3x. Beba água. Afaste o celular.</div>
+      <div class="micro-step"><strong>2. Leia ativando o Par II (visual):</strong> Leia o conteúdo sublinhando com cores diferentes por tipo de informação (conceito, data, nome, fórmula).</div>
+      <div class="micro-step"><strong>3. Verbalize ativando o Par VIII (auditivo):</strong> Explique o que leu em voz alta como se estivesse ensinando alguém. Não olhe as anotações.</div>
+      <div class="micro-step"><strong>4. Escreva ativando o Par XII (motor):</strong> Escreva à mão os pontos principais em forma de mapa mental. Desenhe setas e conexões.</div>
+      <div class="micro-step"><strong>5. Teste ativando recuperação ativa:</strong> Feche tudo e responda: "O que eu aprendi hoje?" Escreva sem olhar. Compare depois.</div>
+      <div class="micro-step"><strong>6. Ancore com emoção:</strong> Pense em como esse conteúdo conecta com sua vida real. A amígdala prioriza memórias com carga emocional.</div>
+    </div>
+  </section>
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script>
+const NERVOS = [
+  { n:'I', rom:'Olfatório', func:'Olfato', emoji:'👃', tip:'Use aromas distintos por matéria para criar âncoras sensoriais' },
+  { n:'II', rom:'Óptico', func:'Visão', emoji:'👁️', tip:'Mapas mentais coloridos, imagens mentais vívidas e bizarras' },
+  { n:'III', rom:'Oculomotor', func:'Movimento dos olhos (maioria)', emoji:'👀', tip:'Mover os olhos ao lembrar (para esquerda = passado, direita = futuro)' },
+  { n:'IV', rom:'Troclear', func:'Movimento ocular (oblíquo superior)', emoji:'🔄', tip:'Variar a direção do olhar ativa diferentes regiões de memória' },
+  { n:'V', rom:'Trigêmeo', func:'Sensação facial e mastigação', emoji:'😬', tip:'Faça expressões faciais ao aprender fatos marcantes — o rosto reforça a memória' },
+  { n:'VI', rom:'Abducente', func:'Movimento ocular lateral', emoji:'👁️', tip:'Mover os olhos de um lado ao outro facilita o acesso a memórias' },
+  { n:'VII', rom:'Facial', func:'Expressão + paladar anterior', emoji:'😄', tip:'Mastigue algo incomum ao estudar temas difíceis — o sabor cria âncora' },
+  { n:'VIII', rom:'Vestibulococlear', func:'Audição e equilíbrio', emoji:'👂', tip:'Leia em voz alta, grave sua voz, caminhe enquanto estuda' },
+  { n:'IX', rom:'Glossofaríngeo', func:'Paladar posterior + deglutição', emoji:'☕', tip:'Beba um chá específico por matéria para criar associação gustativa' },
+  { n:'X', rom:'Vago', func:'Órgãos viscerais + voz', emoji:'🌬️', tip:'Respiração profunda ativa o vago e reduz cortisol antes dos estudos' },
+  { n:'XI', rom:'Acessório', func:'Movimento do pescoço e ombros', emoji:'🤲', tip:'Gesticule ao explicar conceitos — o gesto motor fixa na memória' },
+  { n:'XII', rom:'Hipoglosso', func:'Movimento da língua', emoji:'🗣️', tip:'Explique em voz alta para alguém — ensinar é a técnica de retenção #1' },
+];
+
+document.getElementById('nerve-grid').innerHTML = NERVOS.map(n => `
+  <div class="nerve-card">
+    <div class="nerve-num">PAR ${n.n} ${n.emoji}</div>
+    <div class="nerve-name">${n.rom}</div>
+    <div class="nerve-func">${n.func}</div>
+    <div class="nerve-tip">${n.tip}</div>
+  </div>
+`).join('');
+</script>
+</body>
+</html>
