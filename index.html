@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENEM Acelerado — Aprendizagem com 12 Técnicas</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">E</div>
+    <div class="logo-text">
+      <span class="logo-title">ENEM</span>
+      <span class="logo-sub">Acelerado</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="index.html" class="nav-item active" data-page="home">
+      <i class="ti ti-home"></i><span>Início</span>
+    </a>
+    <a href="pages/materias.html" class="nav-item" data-page="materias">
+      <i class="ti ti-books"></i><span>Matérias</span>
+    </a>
+    <a href="pages/quiz.html" class="nav-item" data-page="quiz">
+      <i class="ti ti-help-circle"></i><span>Quiz</span>
+    </a>
+    <a href="pages/revisao.html" class="nav-item" data-page="revisao">
+      <i class="ti ti-repeat"></i><span>Revisão</span>
+    </a>
+    <a href="pages/nervos.html" class="nav-item" data-page="nervos">
+      <i class="ti ti-brain"></i><span>Nervos Cranianos</span>
+    </a>
+    <a href="pages/upload.html" class="nav-item" data-page="upload">
+      <i class="ti ti-upload"></i><span>Enviar Conteúdo</span>
+    </a>
+    <a href="pages/planner.html" class="nav-item" data-page="planner">
+      <i class="ti ti-calendar"></i><span>Planner</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="progress-summary">
+      <div class="ps-label">Progresso geral</div>
+      <div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div>
+      <div class="ps-pct" id="global-pct">0%</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MOBILE TOPBAR -->
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">ENEM Acelerado</span>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">✦ Aprendizagem Acelerada · 12 Técnicas Ativas</div>
+    <h1 class="hero-title">Estude para o <em>ENEM</em><br>do jeito que o seu cérebro aprende</h1>
+    <p class="hero-desc">Microlearning · Storytelling · Neuroassociação · Mnemônicos · Repetição Espaçada · Recuperação Ativa · e mais 6 técnicas baseadas em neurociência.</p>
+    <div class="hero-cta">
+      <a href="pages/materias.html" class="btn btn-primary"><i class="ti ti-books"></i> Começar a estudar</a>
+      <a href="pages/upload.html" class="btn btn-outline"><i class="ti ti-upload"></i> Enviar meu conteúdo</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><strong>12</strong><span>técnicas ativas</span></div>
+      <div class="hstat-div"></div>
+      <div class="hstat"><strong>5</strong><span>áreas do ENEM</span></div>
+      <div class="hstat-div"></div>
+      <div class="hstat"><strong>12</strong><span>nervos cranianos</span></div>
+      <div class="hstat-div"></div>
+      <div class="hstat"><strong>100+</strong><span>tópicos</span></div>
+    </div>
+  </section>
+
+  <!-- AREAS -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Áreas do conhecimento</h2>
+      <a href="pages/materias.html" class="section-link">Ver todas <i class="ti ti-arrow-right"></i></a>
+    </div>
+    <div class="areas-grid">
+      <a href="pages/materias.html?area=linguagens" class="area-card" style="--accent:#7F77DD;--accent-light:#EEEDFE">
+        <div class="area-icon">✍️</div>
+        <h3>Linguagens e Códigos</h3>
+        <p>Português · Literatura · Inglês · Artes</p>
+        <div class="area-bar"><div class="area-fill" style="width:30%"></div></div>
+        <span class="area-topics">24 tópicos</span>
+      </a>
+      <a href="pages/materias.html?area=humanas" class="area-card" style="--accent:#1D9E75;--accent-light:#E1F5EE">
+        <div class="area-icon">🌍</div>
+        <h3>Ciências Humanas</h3>
+        <p>História · Geografia · Filosofia · Sociologia</p>
+        <div class="area-bar"><div class="area-fill" style="width:20%"></div></div>
+        <span class="area-topics">32 tópicos</span>
+      </a>
+      <a href="pages/materias.html?area=natureza" class="area-card" style="--accent:#D85A30;--accent-light:#FAECE7">
+        <div class="area-icon">⚗️</div>
+        <h3>Ciências da Natureza</h3>
+        <p>Química · Física · Biologia</p>
+        <div class="area-bar"><div class="area-fill" style="width:45%"></div></div>
+        <span class="area-topics">28 tópicos</span>
+      </a>
+      <a href="pages/materias.html?area=matematica" class="area-card" style="--accent:#BA7517;--accent-light:#FAEEDA">
+        <div class="area-icon">📐</div>
+        <h3>Matemática</h3>
+        <p>Álgebra · Geometria · Estatística</p>
+        <div class="area-bar"><div class="area-fill" style="width:15%"></div></div>
+        <span class="area-topics">20 tópicos</span>
+      </a>
+      <a href="pages/materias.html?area=redacao" class="area-card" style="--accent:#D4537E;--accent-light:#FBEAF0">
+        <div class="area-icon">📝</div>
+        <h3>Redação</h3>
+        <p>Dissertação · Argumentação · Repertório</p>
+        <div class="area-bar"><div class="area-fill" style="width:60%"></div></div>
+        <span class="area-topics">12 tópicos</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <h2 class="section-title">Como funciona</h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>Escolha o tema</h3>
+        <p>Navegue pelas matérias ou envie seu próprio conteúdo — texto, resumo ou PDF.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>Aprenda com 12 técnicas</h3>
+        <p>Cada tema é processado com história memorável, mnemônicos, neuroassociação e mais.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>Pratique e fixe</h3>
+        <p>Recuperação ativa com quiz, flashcards e perguntas no estilo ENEM.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <h3>Revise no tempo certo</h3>
+        <p>Plano de repetição espaçada: 24h, 7 dias e 30 dias para retenção máxima.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNIQUES -->
+  <section class="section">
+    <h2 class="section-title">As 12 técnicas ativas</h2>
+    <div class="tech-grid">
+      <div class="tech-item"><i class="ti ti-sections"></i><span>Microlearning</span></div>
+      <div class="tech-item"><i class="ti ti-book-2"></i><span>Storytelling</span></div>
+      <div class="tech-item"><i class="ti ti-brain"></i><span>Neuroassociação</span></div>
+      <div class="tech-item"><i class="ti ti-link"></i><span>Codificação semântica</span></div>
+      <div class="tech-item"><i class="ti ti-eye"></i><span>Multissensorial</span></div>
+      <div class="tech-item"><i class="ti ti-clock"></i><span>Retenção longa</span></div>
+      <div class="tech-item"><i class="ti ti-refresh"></i><span>Recuperação ativa</span></div>
+      <div class="tech-item"><i class="ti ti-repeat"></i><span>Repetição espaçada</span></div>
+      <div class="tech-item"><i class="ti ti-bolt"></i><span>Mnemônicos</span></div>
+      <div class="tech-item"><i class="ti ti-arrows-exchange"></i><span>Analogias</span></div>
+      <div class="tech-item"><i class="ti ti-sitemap"></i><span>Mapas mentais</span></div>
+      <div class="tech-item"><i class="ti ti-sort-ascending"></i><span>Básico ao avançado</span></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="js/app.js"></script>
+</body>
+</html>
