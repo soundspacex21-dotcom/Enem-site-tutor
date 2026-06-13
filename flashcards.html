@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards — ENEM Acelerado</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+/* ── CARD 3D ── */
+.fc-scene { perspective: 1000px; width:100%; max-width:480px; height:260px; margin:0 auto 24px; cursor:pointer; }
+.fc-card { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.5s ease; }
+.fc-card.flipped { transform:rotateY(180deg); }
+.fc-face {
+  position:absolute; inset:0;
+  backface-visibility:hidden;
+  border-radius:20px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:28px 24px; text-align:center;
+  border:1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+.fc-front { background:var(--bg-card); }
+.fc-back  { background:var(--purple-l); transform:rotateY(180deg); border-color:var(--purple); }
+.fc-label { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-3); margin-bottom:12px; }
+.fc-back .fc-label { color:var(--purple); }
+.fc-question { font-size:18px; font-weight:600; color:var(--text); line-height:1.4; }
+.fc-answer   { font-size:15px; color:var(--purple-d); line-height:1.6; }
+[data-theme="dark"] .fc-answer { color:#AFA9EC; }
+.fc-hint { font-size:12px; color:var(--text-3); margin-top:16px; display:flex; align-items:center; gap:4px; }
+
+/* ── ACTIONS ── */
+.fc-actions { display:flex; gap:12px; justify-content:center; margin-bottom:24px; }
+.fc-btn {
+  flex:1; max-width:160px; padding:13px 0;
+  border-radius:var(--radius); border:none;
+  font-size:14px; font-weight:600; cursor:pointer;
+  transition:all .15s; display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.fc-btn-wrong  { background:#FCEBEB; color:#791F1F; }
+.fc-btn-hard   { background:var(--amber-l); color:var(--amber-d); }
+.fc-btn-easy   { background:var(--teal-l); color:var(--teal-d); }
+.fc-btn-wrong:hover { background:#F8D7D7; }
+.fc-btn-hard:hover  { background:#F5E4C3; }
+.fc-btn-easy:hover  { background:#C8EDE0; }
+[data-theme="dark"] .fc-btn-wrong { background:#2A1510; color:#F0997B; }
+[data-theme="dark"] .fc-btn-hard  { background:#261A08; color:#FAC775; }
+[data-theme="dark"] .fc-btn-easy  { background:#0A2820; color:#5DCAA5; }
+
+/* ── PROGRESS ── */
+.fc-progress-wrap { max-width:480px; margin:0 auto 20px; }
+.fc-stats { display:flex; justify-content:space-between; font-size:12px; color:var(--text-3); margin-bottom:6px; }
+.fc-bar { height:6px; background:var(--bg-sub); border-radius:6px; overflow:hidden; }
+.fc-bar-fill { height:100%; background:linear-gradient(90deg,var(--purple),var(--teal)); border-radius:6px; transition:width .4s; }
+
+/* ── DECK SELECT ── */
+.deck-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin-bottom:28px; }
+.deck-card {
+  background:var(--bg-card); border:1.5px solid var(--border);
+  border-radius:var(--radius); padding:16px; cursor:pointer;
+  transition:all .15s; text-align:center;
+}
+.deck-card:hover { border-color:var(--accent,var(--purple)); transform:translateY(-2px); box-shadow:var(--shadow); }
+.deck-card.active { border-color:var(--accent,var(--purple)); background:var(--purple-l); }
+.deck-icon { font-size:28px; margin-bottom:8px; }
+.deck-name { font-size:14px; font-weight:600; }
+.deck-count { font-size:12px; color:var(--text-3); margin-top:3px; }
+
+/* ── DONE SCREEN ── */
+.done-screen { text-align:center; padding:40px 20px; max-width:480px; margin:0 auto; }
+.done-emoji { font-size:56px; margin-bottom:16px; }
+.done-title { font-size:22px; font-weight:700; margin-bottom:8px; }
+.done-sub { font-size:14px; color:var(--text-2); margin-bottom:24px; line-height:1.6; }
+.done-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px; }
+.done-stat { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 8px; }
+.done-stat-val { font-size:22px; font-weight:700; }
+.done-stat-lbl { font-size:11px; color:var(--text-3); }
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark">E</div><div class="logo-text"><span class="logo-title">ENEM</span><span class="logo-sub">Acelerado</span></div></div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item"><i class="ti ti-home"></i><span>Início</span></a>
+    <a href="materias.html" class="nav-item"><i class="ti ti-books"></i><span>Matérias</span></a>
+    <a href="flashcards.html" class="nav-item active"><i class="ti ti-cards"></i><span>Flashcards</span></a>
+    <a href="quiz.html" class="nav-item"><i class="ti ti-help-circle"></i><span>Quiz</span></a>
+    <a href="revisao.html" class="nav-item"><i class="ti ti-repeat"></i><span>Revisão</span></a>
+    <a href="nervos.html" class="nav-item"><i class="ti ti-brain"></i><span>Nervos Cranianos</span></a>
+    <a href="upload.html" class="nav-item"><i class="ti ti-upload"></i><span>Enviar Conteúdo</span></a>
+    <a href="planner.html" class="nav-item"><i class="ti ti-calendar"></i><span>Planner</span></a>
+    <a href="tutor.html" class="nav-item"><i class="ti ti-school"></i><span>Tutor ENEM</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="progress-summary"><div class="ps-label">Progresso geral</div><div class="ps-bar"><div class="ps-fill" id="global-progress"></div></div><div class="ps-pct" id="global-pct">0%</div></div></div>
+</aside>
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+  <span class="topbar-title">Flashcards</span>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-icon"></i></button>
+</header>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1>Flashcards</h1>
+    <p>Vire a carta para ver a resposta. Avalie seu conhecimento e o sistema repete os difíceis automaticamente.</p>
+  </div>
+
+  <!-- DECK SELECT -->
+  <div id="view-decks">
+    <p class="section-label">Escolha um baralho</p>
+    <div class="deck-grid" id="deck-grid"></div>
+  </div>
+
+  <!-- STUDY VIEW -->
+  <div id="view-study" style="display:none">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;max-width:480px;margin-left:auto;margin-right:auto">
+      <button class="btn btn-outline" onclick="backToDecks()" style="padding:8px 14px;font-size:13px">
+        <i class="ti ti-arrow-left"></i> Baralhos
+      </button>
+      <span id="deck-title-label" style="font-size:15px;font-weight:600;flex:1"></span>
+      <button class="btn btn-outline" onclick="shuffleDeck()" style="padding:8px 14px;font-size:13px" title="Embaralhar">
+        <i class="ti ti-arrows-shuffle"></i>
+      </button>
+    </div>
+
+    <!-- Progress -->
+    <div class="fc-progress-wrap">
+      <div class="fc-stats">
+        <span id="fc-counter">1 / 10</span>
+        <span>✅ <span id="fc-easy-count">0</span> &nbsp; ⚠️ <span id="fc-hard-count">0</span> &nbsp; ❌ <span id="fc-wrong-count">0</span></span>
+      </div>
+      <div class="fc-bar"><div class="fc-bar-fill" id="fc-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- Card -->
+    <div class="fc-scene" onclick="flipCard()" id="fc-scene">
+      <div class="fc-card" id="fc-card">
+        <div class="fc-face fc-front">
+          <div class="fc-label">Pergunta</div>
+          <div class="fc-question" id="fc-question"></div>
+          <div class="fc-hint"><i class="ti ti-hand-click" style="font-size:14px"></i> Toque para ver a resposta</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">Resposta</div>
+          <div class="fc-answer" id="fc-answer"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons (hidden until flipped) -->
+    <div class="fc-actions" id="fc-actions" style="opacity:0;pointer-events:none;transition:opacity .3s">
+      <button class="fc-btn fc-btn-wrong" onclick="rate('wrong')"><i class="ti ti-x"></i> Errei</button>
+      <button class="fc-btn fc-btn-hard"  onclick="rate('hard')"><i class="ti ti-alert-triangle"></i> Difícil</button>
+      <button class="fc-btn fc-btn-easy"  onclick="rate('easy')"><i class="ti ti-check"></i> Sabia!</button>
+    </div>
+  </div>
+
+  <!-- DONE VIEW -->
+  <div id="view-done" style="display:none">
+    <div class="done-screen">
+      <div class="done-emoji" id="done-emoji">🏆</div>
+      <div class="done-title" id="done-title">Baralho concluído!</div>
+      <div class="done-sub" id="done-sub"></div>
+      <div class="done-stats">
+        <div class="done-stat"><div class="done-stat-val" id="ds-easy" style="color:var(--teal)">0</div><div class="done-stat-lbl">Sabia!</div></div>
+        <div class="done-stat"><div class="done-stat-val" id="ds-hard" style="color:var(--amber)">0</div><div class="done-stat-lbl">Difícil</div></div>
+        <div class="done-stat"><div class="done-stat-val" id="ds-wrong" style="color:var(--coral)">0</div><div class="done-stat-lbl">Errei</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto">
+        <button class="btn btn-primary btn-full" id="retry-hard-btn" onclick="retryHard()">
+          <i class="ti ti-refresh"></i> Revisar difíceis e erros
+        </button>
+        <button class="btn btn-outline btn-full" onclick="backToDecks()">
+          <i class="ti ti-cards"></i> Escolher outro baralho
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<script src="../js/app.js"></script>
+<script>
+// ══ DECKS ══
+const DECKS = [
+  {
+    id:'humanas', name:'Ciências Humanas', icon:'🌍', color:'#1D9E75',
+    cards:[
+      {q:'O que foi o AI-5?', a:'Ato Institucional nº 5 (1968) — o mais duro da Ditadura Militar. Fechou o Congresso, suspendeu direitos individuais e permitiu censura e prisão sem mandado.'},
+      {q:'Quais os 3 poderes propostos por Montesquieu?', a:'Executivo (governa), Legislativo (faz leis) e Judiciário (julga). A separação impede a concentração de poder — base das democracias modernas.'},
+      {q:'O que é mais-valia para Marx?', a:'O valor que o trabalhador produz além do necessário para cobrir seu salário. Essa diferença fica com o capitalista — é a base da exploração no capitalismo.'},
+      {q:'Mnemônico CAME — o que significa?', a:'C — Censura | A — AI-5 | M — Milagre econômico | E — Eleição (abertura). As 4 fases da Ditadura Militar brasileira.'},
+      {q:'O que diferencia nazismo de fascismo?', a:'Fascismo = nacionalismo extremo + Estado autoritário. Nazismo = fascismo + racismo científico + antissemitismo. Todo nazismo é fascismo, mas nem todo fascismo é nazismo.'},
+      {q:'O que foi a Guerra Fria?', a:'Tensão ideológica (1947–1991) entre EUA (capitalismo) e URSS (socialismo). Nunca houve guerra direta entre elas — por isso "fria". Incluiu Corrida Espacial e corrida armamentista.'},
+      {q:'Quem são MDW na Sociologia?', a:'M — Marx (luta de classes) | D — Durkheim (fato social) | W — Weber (ação social racional). Os 3 sociólogos clássicos mais cobrados no ENEM.'},
+      {q:'O que é urbanização?', a:'Crescimento das cidades em geral. Diferente de metropolização (concentração em grandes metrópoles com cidades-satélite). No Brasil, acelerou com a industrialização dos anos 1950.'},
+      {q:'Quais são os filósofos do Iluminismo? (LRVM)', a:'L — Locke (liberdade natural) | R — Rousseau (vontade geral) | V — Voltaire (liberdade de expressão) | M — Montesquieu (3 poderes).'},
+      {q:'Por que o Brasil entrou na 2ª Guerra Mundial?', a:'Inicialmente neutro, entrou em 1942 após submarinos alemães afundarem navios brasileiros. Enviou a FEB (Força Expedicionária Brasileira) para lutar na Itália em 1944.'},
+    ]
+  },
+  {
+    id:'natureza', name:'Ciências da Natureza', icon:'⚗️', color:'#D85A30',
+    cards:[
+      {q:'Quais são as 3 Leis de Newton? (INA)', a:'I — Inércia: corpo em repouso tende a ficar em repouso | N — F = m·a: força = massa × aceleração | A — Ação e Reação: toda ação tem reação igual e oposta.'},
+      {q:'Fórmula da fotossíntese', a:'6CO₂ + 6H₂O + energia luminosa → C₆H₁₂O₆ + 6O₂. As plantas convertem luz solar em glicose (energia química) e liberam oxigênio.'},
+      {q:'Diferença entre mitose e meiose', a:'Mitose: 1 célula → 2 células idênticas (2n). Para crescimento e regeneração. | Meiose: 1 célula → 4 células diferentes (n). Para reprodução sexual. Gera variabilidade.'},
+      {q:'O que é o dogma central da biologia?', a:'DNA → RNA → Proteína. O DNA é transcrito em RNA mensageiro, que é traduzido em proteína pelos ribossomos. Explica como a informação genética vira função celular.'},
+      {q:'O que determina o período e o grupo na tabela periódica?', a:'Período (linha horizontal) = número de camadas eletrônicas. Grupo (coluna vertical) = número de elétrons na camada de valência (determina as propriedades químicas).'},
+      {q:'Tipos de ligações químicas', a:'Iônica: metal + não-metal (transferência de elétrons). Covalente: não-metal + não-metal (compartilhamento). Metálica: metal + metal (mar de elétrons).'},
+      {q:'Fórmula da 2ª Lei de Newton', a:'F = m · a. Força (N) = massa (kg) × aceleração (m/s²). Quanto maior a força, maior a aceleração. Quanto maior a massa, menor a aceleração para a mesma força.'},
+      {q:'O que é pH?', a:'Potencial hidrogeniônico. pH < 7 = ácido (vinagre, suco de limão). pH = 7 = neutro (água pura). pH > 7 = básico/alcalino (sabão, bicarbonato).'},
+      {q:'O que é seleção natural (Darwin)?', a:'Os indivíduos com características mais adaptadas ao ambiente sobrevivem e se reproduzem mais. Com o tempo, essas características se tornam mais frequentes na população — é a evolução.'},
+      {q:'Velocidade média — fórmula e unidade', a:'v = Δd / Δt. Velocidade = variação da distância ÷ variação do tempo. Unidade: m/s ou km/h. No ENEM sempre verifique a unidade antes de calcular!'},
+    ]
+  },
+  {
+    id:'matematica', name:'Matemática', icon:'📐', color:'#BA7517',
+    cards:[
+      {q:'Fórmula de Bhaskara', a:'x = (−b ± √Δ) / 2a, onde Δ = b² − 4ac. Se Δ > 0: duas raízes reais. Δ = 0: uma raiz. Δ < 0: sem raízes reais.'},
+      {q:'Fórmula dos juros compostos', a:'M = C · (1 + i)^t. M = montante final, C = capital inicial, i = taxa (em decimal), t = tempo. Juros incidem sobre o montante acumulado — "juros sobre juros".'},
+      {q:'Área das figuras planas mais cobradas', a:'Triângulo: b·h/2 | Retângulo: b·h | Círculo: π·r² | Trapézio: (B+b)·h/2 | Paralelogramo: b·h'},
+      {q:'Teorema de Pitágoras', a:'a² = b² + c², onde a é a hipotenusa (lado oposto ao ângulo reto) e b, c são os catetos. Válido APENAS para triângulos retângulos.'},
+      {q:'Probabilidade — fórmula básica', a:'P(A) = casos favoráveis / total de casos possíveis. Ex: dado com 6 faces, sair par (2,4,6) = 3 favoráveis / 6 total = 1/2 = 50%.'},
+      {q:'O que é média, mediana e moda?', a:'Média: soma ÷ quantidade. | Mediana: valor central (ordenado). | Moda: valor que mais se repete. No ENEM, leia com atenção qual dos três está sendo pedido!'},
+      {q:'Fórmula do termo geral da PA', a:'aₙ = a₁ + (n−1)·r. aₙ = termo desejado, a₁ = primeiro termo, n = posição, r = razão (diferença entre termos consecutivos).'},
+      {q:'Função do 1° grau — o que representa o a e o b?', a:'f(x) = ax + b. "a" é o coeficiente angular (inclinação da reta). "b" é o coeficiente linear (onde a reta corta o eixo y). Se a > 0: crescente. Se a < 0: decrescente.'},
+      {q:'Como encontrar o vértice da parábola?', a:'Xv = −b / 2a (ponto de máximo ou mínimo). Yv = −Δ / 4a. Se a > 0: vértice é mínimo (parábola abre para cima). Se a < 0: vértice é máximo.'},
+      {q:'Volume das figuras espaciais mais cobradas', a:'Cubo: a³ | Paralelepípedo: c·l·a | Cilindro: π·r²·h | Cone: π·r²·h/3 | Esfera: 4π·r³/3'},
+    ]
+  },
+  {
+    id:'linguagens', name:'Linguagens e Códigos', icon:'✍️', color:'#7F77DD',
+    cards:[
+      {q:'O que é metáfora?', a:'Comparação implícita, sem usar "como" ou "tal qual". Ex: "A vida é uma viagem." Diferente da comparação/símile: "A vida é como uma viagem."'},
+      {q:'O que é metonímia?', a:'Substituição de uma palavra por outra com relação de proximidade. Tipos: parte pelo todo ("O Brasil ganhou" = a seleção), autor pela obra ("Leio Machado" = obras de Machado).'},
+      {q:'Características do Modernismo brasileiro (1ª fase)', a:'1922–1930. Ruptura com o passado, valorização do cotidiano e do popular, linguagem coloquial, humor e ironia. Oswald de Andrade, Mário de Andrade, Manuel Bandeira.'},
+      {q:'Diferença entre narrador em 1ª e 3ª pessoa', a:'1ª pessoa (eu): narrador-personagem, participa da história, visão limitada. 3ª pessoa: narrador de fora, pode ser onisciente (sabe tudo) ou observador (só vê o externo).'},
+      {q:'O que são as funções da linguagem? (as mais cobradas)', a:'Referencial: informar (jornais). Emotiva: expressar emoções do emissor (poesia lírica). Conativa: persuadir o receptor (publicidade). Metalinguística: falar sobre a própria linguagem.'},
+      {q:'O que é intertextualidade?', a:'Quando um texto dialoga com outro — citando, imitando, parodiando ou subvertendo. O ENEM apresenta dois textos e pede que você identifique a relação entre eles.'},
+      {q:'Características do Realismo brasileiro', a:'1881–1900. Crítica social, objetividade, determinismo, personagens complexos. Machado de Assis (Brás Cubas, Dom Casmurro) e Aluísio Azevedo (O Cortiço).'},
+      {q:'O que é eufemismo?', a:'Suavizar uma ideia desagradável. Ex: "ele nos deixou" (em vez de "morreu"), "necessidades fisiológicas" (em vez de "urinar"). Oculta a dureza da realidade.'},
+      {q:'O que é hipérbole?', a:'Exagero intencional para dar ênfase. Ex: "Estou morrendo de fome", "Te liguei mil vezes". Muito comum na linguagem coloquial e na publicidade.'},
+      {q:'O que avalia a Competência 1 da redação ENEM?', a:'Domínio da modalidade escrita formal da língua portuguesa: ortografia, acentuação, pontuação, concordância verbal e nominal, regência e morfossintaxe.'},
+    ]
+  },
+  {
+    id:'redacao', name:'Redação', icon:'📝', color:'#D4537E',
+    cards:[
+      {q:'Estrutura da dissertação ENEM (TADIC)', a:'T — Tese (introdução) | A — Argumento 1 + dado | D — Desenvolvimento 2 | I — Intervenção (5 elementos) | C — Conclusão retomando a tese'},
+      {q:'Quais são os 5 elementos da proposta de intervenção?', a:'1. Agente (quem vai agir) | 2. Ação (o que fazer) | 3. Meio/modo (como fazer) | 4. Finalidade (para quê) | 5. Efeito esperado (resultado). Todos presentes = 200 pts na C5.'},
+      {q:'Quais são as 5 competências avaliadas na redação?', a:'C1: norma culta | C2: compreensão da proposta | C3: argumentação | C4: coesão textual | C5: proposta de intervenção. Cada uma vale até 200 pontos.'},
+      {q:'O que é coesão textual?', a:'Uso correto de conectivos e referências para ligar as ideias do texto. Exemplos: "portanto" (conclusão), "entretanto" (oposição), "além disso" (adição), "visto que" (causa).'},
+      {q:'Conectivos de causa e consequência', a:'Causa: porque, pois, visto que, já que, uma vez que. | Consequência: portanto, logo, assim, por isso, dessa forma, consequentemente.'},
+      {q:'O que é repertório sociocultural?', a:'Citação de dados, leis, filósofos, fatos históricos, obras literárias ou científicas para embasar o argumento. Deve estar CONECTADO ao tema — repertório solto pode causar fuga de tema.'},
+      {q:'O que é fuga de tema?', a:'Quando o texto não aborda o tema proposto. Nota zero na C2. Para evitar: identifique a palavra-chave do tema, escreva uma tese clara e mantenha todos os parágrafos ligados a ela.'},
+      {q:'Como fazer uma boa introdução?', a:'2-3 linhas: contextualização (situar o tema no tempo/espaço/sociedade) + tese (sua posição sobre o tema). Evite começar com "Desde os primórdios" ou definições de dicionário.'},
+      {q:'Conectivos de concessão e oposição', a:'Concessão: embora, apesar de, ainda que, mesmo que. | Oposição/contraste: entretanto, porém, todavia, no entanto, contudo. | Use para introduzir o contra-argumento.'},
+      {q:'O que é tangenciamento na redação?', a:'Quando o texto aborda o tema de forma superficial, sem aprofundamento. Recebe nota baixa na C2. Diferente de fuga total — o tema é mencionado, mas não desenvolvido adequadamente.'},
+    ]
+  },
+];
+
+// ══ STATE ══
+let currentDeck = null;
+let cards = [];
+let idx = 0;
+let results = { easy:0, hard:0, wrong:0 };
+let flipped = false;
+let hardCards = [];
+
+// ══ RENDER DECKS ══
+function renderDecks() {
+  document.getElementById('deck-grid').innerHTML = DECKS.map(d => {
+    const saved = JSON.parse(localStorage.getItem('fc_'+d.id) || '{}');
+    const done = Object.keys(saved).length;
+    return `
+    <div class="deck-card" onclick="startDeck('${d.id}')" style="--accent:${d.color}">
+      <div class="deck-icon">${d.icon}</div>
+      <div class="deck-name">${d.name}</div>
+      <div class="deck-count">${d.cards.length} cards · ${done} revisados</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ START DECK ══
+function startDeck(id) {
+  currentDeck = DECKS.find(d => d.id === id);
+  cards = [...currentDeck.cards];
+  shuffle(cards);
+  idx = 0; results = {easy:0, hard:0, wrong:0}; hardCards = [];
+  showStudyView();
+  renderCard();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+}
+
+function shuffleDeck() { shuffle(cards); idx=0; results={easy:0,hard:0,wrong:0}; hardCards=[]; renderCard(); }
+
+function showStudyView() {
+  document.getElementById('view-decks').style.display = 'none';
+  document.getElementById('view-done').style.display = 'none';
+  document.getElementById('view-study').style.display = 'block';
+  document.getElementById('deck-title-label').textContent = currentDeck.icon + ' ' + currentDeck.name;
+}
+
+function backToDecks() {
+  document.getElementById('view-study').style.display = 'none';
+  document.getElementById('view-done').style.display = 'none';
+  document.getElementById('view-decks').style.display = 'block';
+  renderDecks();
+}
+
+// ══ RENDER CARD ══
+function renderCard() {
+  if (idx >= cards.length) { showDone(); return; }
+  const card = cards[idx];
+  document.getElementById('fc-question').textContent = card.q;
+  document.getElementById('fc-answer').textContent = card.a;
+  // Reset flip
+  flipped = false;
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('fc-actions').style.opacity = '0';
+  document.getElementById('fc-actions').style.pointerEvents = 'none';
+  // Progress
+  const pct = Math.round((idx / cards.length) * 100);
+  document.getElementById('fc-bar').style.width = pct + '%';
+  document.getElementById('fc-counter').textContent = (idx+1) + ' / ' + cards.length;
+  document.getElementById('fc-easy-count').textContent = results.easy;
+  document.getElementById('fc-hard-count').textContent = results.hard;
+  document.getElementById('fc-wrong-count').textContent = results.wrong;
+}
+
+// ══ FLIP ══
+function flipCard() {
+  if (flipped) return;
+  flipped = true;
+  document.getElementById('fc-card').classList.add('flipped');
+  document.getElementById('fc-actions').style.opacity = '1';
+  document.getElementById('fc-actions').style.pointerEvents = 'auto';
+}
+
+// ══ RATE ══
+function rate(result) {
+  results[result]++;
+  if (result === 'wrong' || result === 'hard') hardCards.push(cards[idx]);
+  idx++;
+  renderCard();
+}
+
+// ══ DONE ══
+function showDone() {
+  document.getElementById('view-study').style.display = 'none';
+  document.getElementById('view-done').style.display = 'block';
+  document.getElementById('ds-easy').textContent = results.easy;
+  document.getElementById('ds-hard').textContent = results.hard;
+  document.getElementById('ds-wrong').textContent = results.wrong;
+  const total = results.easy + results.hard + results.wrong;
+  const pct = Math.round((results.easy / total) * 100);
+  let emoji = '🏆', title = 'Excelente!', sub = 'Você domina este conteúdo! Revise em 7 dias.';
+  if (pct < 50) { emoji='💪'; title='Continue praticando!'; sub='Revise os flashcards difíceis e tente de novo em 24 horas.'; }
+  else if (pct < 80) { emoji='👍'; title='Bom progresso!'; sub='Você está evoluindo! Revise os difíceis antes da prova.'; }
+  document.getElementById('done-emoji').textContent = emoji;
+  document.getElementById('done-title').textContent = title;
+  document.getElementById('done-sub').textContent = sub + ` Acertos: ${pct}% (${results.easy} de ${total})`;
+  document.getElementById('retry-hard-btn').style.display = hardCards.length ? 'flex' : 'none';
+  // Save progress
+  const saved = {};
+  cards.forEach((c,i) => saved[c.q] = true);
+  localStorage.setItem('fc_'+currentDeck.id, JSON.stringify(saved));
+  updateProgress();
+}
+
+function retryHard() {
+  cards = [...hardCards];
+  shuffle(cards);
+  idx = 0; results={easy:0,hard:0,wrong:0}; hardCards=[];
+  showStudyView(); renderCard();
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('view-study').style.display === 'none') return;
+  if (e.key === ' ' || e.key === 'ArrowUp') { e.preventDefault(); flipCard(); }
+  if (flipped) {
+    if (e.key === '1' || e.key === 'ArrowLeft') rate('wrong');
+    if (e.key === '2' || e.key === 'ArrowDown') rate('hard');
+    if (e.key === '3' || e.key === 'ArrowRight') rate('easy');
+  }
+});
+
+renderDecks();
+</script>
+</body>
+</html>
